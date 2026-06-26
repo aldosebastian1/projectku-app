@@ -273,4 +273,17 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get timeRemainingOverdue => 'Batas waktu berakhir';
+
+  @override
+  String get tugasChecklist => 'Daftar Tugas / Milestone';
+
+  @override
+  String get tambahTugas => 'Tambah Tugas';
+
+  @override
+  String get tugasHint => 'Tulis nama tugas...';
+
+  @override
+  String get tugasKosong =>
+      'Belum ada tugas. Tambahkan tugas pertamamu di atas!';
 }
