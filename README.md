@@ -1,17 +1,98 @@
-# ProjectKu
+# 📱 ProjectKu — Professional Freelancer Workspace Tracker
 
-ProjectKu adalah aplikasi manajemen proyek mandiri (freelance) berbasis real-time yang dirancang untuk mengatasi kompleksitas administratif dalam menangani banyak klien. Seringkali, pekerja lepas menghadapi tantangan operasional—seperti terlewatnya tenggat waktu krusial atau tagihan (invoice) yang tidak terkelola—akibat proses pencatatan manual yang tersebar. Aplikasi ini hadir sebagai solusi sentralisasi data, memungkinkan pengguna untuk memantau siklus hidup proyek, alokasi anggaran, dan status pembayaran dalam satu dasbor interaktif. Dibangun dengan arsitektur modern menggunakan Flutter, implementasi state management Riverpod, serta dukungan backend Firebase Cloud Firestore, ProjectKu menjamin sinkronisasi data yang cepat, aman, dan skalabel untuk penggunaan profesional.
+[![Flutter](https://img.shields.io/badge/Flutter-v3.22+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-v3.4+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![Riverpod](https://img.shields.io/badge/Riverpod-v3.3--State-38BDF8?logo=flutter)](https://riverpod.dev)
+[![Firebase Cloud Firestore](https://img.shields.io/badge/Firebase-Firestore-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
+[![GoRouter](https://img.shields.io/badge/GoRouter-v17--Declarative-0A0F1D)](https://pub.dev/packages/go_router)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## Getting Started
+**ProjectKu** adalah aplikasi mobile manajemen proyek dan pelacak finansial *real-time* yang dirancang khusus untuk memenuhi kebutuhan administrasi pekerja lepas (*freelancer*). Dibangun menggunakan **Flutter (Material 3)**, dengan pengelolaan state reaktif **Riverpod**, navigasi deklaratif **GoRouter**, serta sinkronisasi data instan berbasis **Firebase Cloud Firestore**.
 
-This project is a starting point for a Flutter application.
+Aplikasi ini berfokus pada penyelesaian masalah klasik *freelancer*, seperti pencatatan keuangan yang tercecer, manajemen klien yang tidak terpusat, serta kelalaian dalam memantau tenggat waktu proyek (*due date*).
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## 📂 Peta Dokumentasi Proyek (Documentation Roadmap)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Untuk mempermudah peninjauan teknis, dokumentasi proyek ini telah dibagi menjadi beberapa panduan terstruktur:
+
+1.  💼 **[PORTFOLIO_CASE_STUDY.md](file:///D:/Portofolio/ProjectKu/PORTFOLIO_CASE_STUDY.md)**: Analisis mendalam tentang keputusan rekayasa perangkat lunak, penyelesaian masalah, diagram arsitektur MVC-Riverpod, skema database, pengujian, dan otomatisasi alur.
+2.  📂 **[PROJECT_DOCUMENTATION.md](file:///D:/Portofolio/ProjectKu/PROJECT_DOCUMENTATION.md)**: Manual referensi komponen kode, penjelasan folder `lib`, dan cara kerja data flow.
+3.  🎨 **[ui_documentation.md](file:///D:/Portofolio/ProjectKu/ui_documentation.md)**: Panduan visual sistem desain UI/UX, token warna, tipografi Outfit, sisa waktu progress bar, dan responsivitas layout.
+4.  ⚡ **[PANDUAN_SETUP_FIREBASE.md](file:///D:/Portofolio/ProjectKu/PANDUAN_SETUP_FIREBASE.md)**: Panduan langkah demi langkah cara menghubungkan aplikasi ini ke konsol Firebase Anda sendiri menggunakan FlutterFire CLI.
+5.  🗺️ **[flow.md](file:///D:/Portofolio/ProjectKu/flow.md)**: Peta alur navigasi aktual aplikasi yang dihasilkan secara otomatis menggunakan skrip Dart.
+
+---
+
+## ✨ Fitur Utama (Core Features)
+
+*   💳 **Dasbor Wallet-style Hero Card:** Visualisasi rekap keuangan real-time yang memisahkan Total Pendapatan Bersih (Terbayar), Total Tagihan Aktif (Belum Terbayar), serta jumlah proyek yang sedang berjalan.
+*   🔄 **Real-time Firestore Integration:** Pembaruan data instan di seluruh perangkat pengguna tanpa perlu memuat ulang halaman (*pull-to-refresh*).
+*   🏷️ **Dynamic Progress Bar Timeline:** Bar kemajuan pengerjaan proyek yang beradaptasi secara otomatis (berwarna merah jika terlambat, kuning jika mendekati tenggat waktu, dan hijau jika selesai).
+*   📱 **Responsive Layout (Adaptabilitas Layar):** Pembatasan lebar kontainer cerdas (maksimal 850px) memastikan kenyamanan visual yang prima pada perangkat mobile, tablet, hingga desktop web.
+*   🇺🇸🇮🇩 **Lokalisasi Bahasa (Localization):** Mendukung Bahasa Indonesia (default) dan Bahasa Inggris untuk cakupan audiens profesional yang lebih luas.
+
+---
+
+## 🏗️ Struktur Proyek (MVC Architecture)
+
+Basis kode ProjectKu menerapkan arsitektur **MVC (Model-View-Controller)** yang terpisah rapi guna menjaga prinsip *Separation of Concerns* (SoC):
+
+```text
+lib/
+├── models/        # Entitas data bisnis murni (contoh: project_model.dart)
+├── views/         # Representasi tampilan UI & Layout (contoh: project_list_view.dart)
+├── controllers/   # Logika bisnis & manipulasi state Riverpod (contoh: project_controller.dart)
+├── services/      # Abstraksi koneksi luar & Database Firestore (contoh: firestore_service.dart)
+└── utils/         # Konfigurasi router, format rupiah, dan tema global Material 3
+```
+
+---
+
+## ⚙️ Cara Memulai & Menjalankan Proyek (Getting Started)
+
+### 📋 Prasyarat
+*   Flutter SDK terinstal (versi `>= 3.22.x` direkomendasikan).
+*   Dart SDK terinstal (versi `>= 3.4.x`).
+*   Firebase CLI & Node.js terpasang pada komputer Anda.
+
+### 🛠️ Langkah Instalasi
+1.  Kloning repositori ini ke komputer lokal Anda.
+2.  Masuk ke direktori proyek dan pasang dependensi Flutter:
+    ```bash
+    flutter pub get
+    ```
+3.  Hubungkan dengan Firebase Anda sendiri dengan mengikuti panduan terperinci di berkas **[PANDUAN_SETUP_FIREBASE.md](file:///D:/Portofolio/ProjectKu/PANDUAN_SETUP_FIREBASE.md)**.
+4.  Jalankan static analysis untuk memastikan kode bersih dari kesalahan:
+    ```bash
+    flutter analyze
+    ```
+5.  Jalankan seluruh suite pengujian widget:
+    ```bash
+    flutter test
+    ```
+6.  Nyalakan emulator atau perangkat fisik Anda, kemudian jalankan aplikasi:
+    ```bash
+    flutter run
+    ```
+
+---
+
+## 🧪 Kualitas Pengujian (Testing Quality)
+
+ProjectKu dilengkapi dengan widget testing terotomatisasi di **[widget_test.dart](file:///D:/Portofolio/ProjectKu/test/widget_test.dart)** yang memvalidasi integritas dasbor keuangan, pemrosesan filter tab, serta rendering komponen data tanpa perlu tersambung ke koneksi internet Firestore (menggunakan state overrides).
+
+Untuk menjalankan pengujian:
+```bash
+flutter test
+```
+
+---
+
+## 👤 Pembuat / Kontak (Author)
+
+*   **Aldo Sebastian**
+*   LinkedIn: [LinkedIn Profile](https://linkedin.com)
+*   Portfolio Website: [aldosebastian.dev](https://aldosebastian.dev)
+*   Email: [aldo.sebastian@example.com](mailto:aldo.sebastian@example.com)
