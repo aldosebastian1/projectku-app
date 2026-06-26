@@ -70,16 +70,19 @@ class ProjectListView extends ConsumerWidget {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.2)),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.border),
+                color: AppTheme.elevatedSurface,
               ),
-              child: const Icon(
-                Icons.grid_view_rounded,
-                color: AppTheme.primaryColor,
-                size: 22,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(9),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             const SizedBox(width: 14),
@@ -89,7 +92,7 @@ class ProjectListView extends ConsumerWidget {
                 Text(
                   l10n.appTitle,
                   style: const TextStyle(
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     fontSize: 18,
                     letterSpacing: -0.5,
                   ),
@@ -123,7 +126,7 @@ class ProjectListView extends ConsumerWidget {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 850), // Responsive Max Width for Large Screens
+          constraints: const BoxConstraints(maxWidth: 480), // Responsive Max Width for Calm Workspace
           child: projectsAsync.when(
             data: (projects) {
               if (projects.isEmpty) {
@@ -220,9 +223,9 @@ class ProjectListView extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: const Color(0xFF0F1524),
+            color: const Color(0xFFE8EDF3), // Light borderHighlightColor
             shape: BoxShape.circle,
-            border: Border.all(color: const Color(0x0CFFFFFF)),
+            border: Border.all(color: AppTheme.borderHighlightColor),
           ),
           child: Icon(
             icon,
@@ -266,7 +269,7 @@ class ProjectListView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: AppTheme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0x0CFFFFFF)),
+          border: Border.all(color: AppTheme.borderHighlightColor),
         ),
         child: content,
       );
@@ -284,6 +287,8 @@ class ProjectListView extends ConsumerWidget {
     double totalPaid = 0.0;
     double totalPending = 0.0;
     int activeCount = 0;
+    int totalTasksCount = 0;
+    int completedTasksCount = 0;
 
     for (var project in allProjects) {
       if (project.paymentStatus == 'Paid') {
@@ -295,6 +300,9 @@ class ProjectListView extends ConsumerWidget {
       if (project.status == 'In Progress') {
         activeCount++;
       }
+
+      totalTasksCount += project.tasks.length;
+      completedTasksCount += project.tasks.where((t) => t.isCompleted).length;
     }
 
     final l10n = AppLocalizations.of(context)!;
@@ -305,46 +313,26 @@ class ProjectListView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Dashboard Welcome Title using Headline Large
+          // Dashboard Title
           Text(
-            l10n.welcomeTitle,
-            style: Theme.of(context).textTheme.headlineLarge,
+            "Dashboard",
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 30, // Calm Workspace clean display size
+                ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            l10n.welcomeSubtitle,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppTheme.textColorSecondary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           // Search & Sort Bar
           Row(
             children: [
               Expanded(
                 child: TextField(
                   onChanged: (val) => ref.read(projectSearchProvider.notifier).setSearch(val),
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14, color: AppTheme.textColorPrimary),
                   decoration: InputDecoration(
                     hintText: l10n.searchHint,
                     prefixIcon: const Icon(Icons.search_rounded, size: 20, color: AppTheme.textColorSecondary),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    filled: true,
-                    fillColor: const Color(0xFF0F1524),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0x0CFFFFFF)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0x0CFFFFFF)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: AppTheme.primaryColor, width: 1.5),
-                    ),
                   ),
                 ),
               ),
@@ -354,182 +342,52 @@ class ProjectListView extends ConsumerWidget {
                 onTap: () => _showSortOptions(context, ref),
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F1524),
+                    color: AppTheme.cardColor,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x0CFFFFFF)),
+                    border: Border.all(color: AppTheme.borderHighlightColor),
                   ),
-                  child: const Icon(Icons.swap_vert_rounded, color: AppTheme.primaryColor),
+                  child: const Icon(Icons.swap_vert_rounded, color: AppTheme.primaryColor, size: 20),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          // Sleek Wallet-styled Metric Dashboard Card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1E2640), // Navy
-                  Color(0xFF0F1524), // Charcoal black
-                ],
+          // Metric Cards Grid
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.3,
+            children: [
+              _buildMetricCard(
+                title: l10n.totalPaid,
+                value: formatRupiah(totalPaid),
+                icon: Icons.check_circle_outline_rounded,
+                iconColor: AppTheme.secondaryColor,
               ),
-              border: Border.all(
-                color: AppTheme.primaryColor.withValues(alpha: 0.12),
-                width: 1,
+              _buildMetricCard(
+                title: l10n.tagihanTertunda,
+                value: formatRupiah(totalPending),
+                icon: Icons.hourglass_empty_rounded,
+                iconColor: AppTheme.errorColor,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.04),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      l10n.totalPaid,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textColorSecondary,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.secondaryColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppTheme.secondaryColor.withValues(alpha: 0.2)),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.check_circle_outline_rounded, color: AppTheme.secondaryColor, size: 12),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.verified,
-                            style: const TextStyle(
-                              color: AppTheme.secondaryColor,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  formatRupiah(totalPaid),
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w900,
-                    color: AppTheme.textColorPrimary,
-                    letterSpacing: -0.8,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Divider(color: Color(0x0CFFFFFF), height: 1),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: AppTheme.accentColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                l10n.tagihanTertunda,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textColorSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            formatRupiah(totalPending),
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: AppTheme.textColorPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 1,
-                      height: 36,
-                      color: const Color(0x0CFFFFFF),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: AppTheme.primaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                l10n.proyekAktif,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textColorSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.activeProjectsCount(activeCount),
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: AppTheme.textColorPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              _buildMetricCard(
+                title: l10n.proyekAktif,
+                value: l10n.activeProjectsCount(activeCount),
+                icon: Icons.work_outline_rounded,
+                iconColor: AppTheme.primaryColor,
+              ),
+              _buildMetricCard(
+                title: "Tugas Selesai",
+                value: "$completedTasksCount/$totalTasksCount",
+                icon: Icons.playlist_add_check_rounded,
+                iconColor: AppTheme.primaryColor,
+              ),
+            ],
           ),
           const SizedBox(height: 24),
 
@@ -595,9 +453,9 @@ class ProjectListView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F1524), // Darker background for contrast matching ui_documentation.md
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0x0CFFFFFF)),
+        color: const Color(0xFFF1F5F9), // Segmented Control Background
+        borderRadius: BorderRadius.circular(14), // Segmented Control Radius
+        border: Border.all(color: AppTheme.borderHighlightColor),
       ),
       child: Row(
         children: [
@@ -617,18 +475,27 @@ class ProjectListView extends ConsumerWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.cardColor : Colors.transparent, // High contrast selected color
-            borderRadius: BorderRadius.circular(12),
+            color: isSelected ? Colors.white : Colors.transparent, // Active White
+            borderRadius: BorderRadius.circular(10), // Inner Radius
             border: Border.all(
-              color: isSelected ? const Color(0x0CFFFFFF) : Colors.transparent,
+              color: isSelected ? AppTheme.borderHighlightColor : Colors.transparent,
             ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03), // Level 1 Elevation
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                : null,
           ),
           alignment: Alignment.center,
           child: Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               color: isSelected ? AppTheme.primaryColor : AppTheme.textColorSecondary,
             ),
           ),
@@ -661,7 +528,7 @@ class ProjectListView extends ConsumerWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
-          color: AppTheme.errorColor.withValues(alpha: 0.85),
+          color: AppTheme.errorAccent,
           borderRadius: BorderRadius.circular(24),
         ),
         child: const Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 28),
@@ -697,7 +564,7 @@ class ProjectListView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: AppTheme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0x0CFFFFFF)),
+          border: Border.all(color: AppTheme.borderHighlightColor),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
@@ -746,7 +613,7 @@ class ProjectListView extends ConsumerWidget {
                       formatRupiah(project.budget),
                       style: const TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         color: AppTheme.primaryColor,
                       ),
                     ),
@@ -797,7 +664,7 @@ class ProjectListView extends ConsumerWidget {
                   child: LinearProgressIndicator(
                     value: project.status == 'Completed' ? 1.0 : taskProgress,
                     minHeight: 4,
-                    backgroundColor: const Color(0xFF0F1524),
+                    backgroundColor: AppTheme.baseBackground,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       project.status == 'Completed'
                           ? AppTheme.secondaryColor
@@ -809,13 +676,17 @@ class ProjectListView extends ConsumerWidget {
                 ),
                 const SizedBox(height: 18),
 
-                const Divider(height: 1, color: Color(0x0CFFFFFF)),
+                const Divider(height: 1, color: AppTheme.borderHighlightColor),
                 const SizedBox(height: 14),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 12,
+                  runSpacing: 10,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.calendar_today_rounded,
@@ -827,7 +698,7 @@ class ProjectListView extends ConsumerWidget {
                           DateFormat('dd MMM yyyy').format(project.dueDate),
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: isOverdue ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: isOverdue ? FontWeight.w600 : FontWeight.w600,
                             color: isOverdue ? AppTheme.errorColor : AppTheme.textColorSecondary,
                           ),
                         ),
@@ -844,7 +715,7 @@ class ProjectListView extends ConsumerWidget {
                               style: const TextStyle(
                                 color: AppTheme.errorColor,
                                 fontSize: 9,
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
@@ -852,6 +723,7 @@ class ProjectListView extends ConsumerWidget {
                       ],
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildBadge(
                           project.status == 'In Progress'
@@ -891,7 +763,7 @@ class ProjectListView extends ConsumerWidget {
         style: TextStyle(
           color: color,
           fontSize: 10.5,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -1006,10 +878,10 @@ class ProjectListView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppTheme.primaryColor.withValues(alpha: 0.1)
-              : const Color(0xFF0F1524),
+              : AppTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.4) : const Color(0x0CFFFFFF),
+            color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.4) : AppTheme.borderHighlightColor,
             width: 1.5,
           ),
         ),
@@ -1078,7 +950,7 @@ class ProjectListView extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x0CFFFFFF)),
+        border: Border.all(color: AppTheme.borderHighlightColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1138,7 +1010,7 @@ class ProjectListView extends ConsumerWidget {
                                       '${(paidPercentage * value).toInt()}%',
                                       style: const TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w700,
                                         color: AppTheme.secondaryColor,
                                       ),
                                     ),
@@ -1218,12 +1090,12 @@ class ProjectListView extends ConsumerWidget {
                                                 height: (barConstraints.maxHeight * value).clamp(4.0, barConstraints.maxHeight),
                                                 width: 14,
                                                 decoration: BoxDecoration(
-                                                  gradient: const LinearGradient(
+                                                  gradient: LinearGradient(
                                                     begin: Alignment.topCenter,
                                                     end: Alignment.bottomCenter,
                                                     colors: [
-                                                      AppTheme.secondaryColor,
-                                                      Color(0xFF0F2D1F),
+                                                      AppTheme.primaryColor,
+                                                      AppTheme.primaryColor.withValues(alpha: 0.3),
                                                     ],
                                                   ),
                                                   borderRadius: BorderRadius.circular(4),
@@ -1307,7 +1179,7 @@ class ProjectListView extends ConsumerWidget {
               percentage,
               style: TextStyle(
                 fontSize: 10.5,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
                 color: color,
               ),
             ),
@@ -1320,12 +1192,66 @@ class ProjectListView extends ConsumerWidget {
             amount,
             style: const TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
               color: AppTheme.textColorSecondary,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildMetricCard({
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color iconColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppTheme.borderHighlightColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(icon, size: 20, color: iconColor),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppTheme.textColorSecondary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textColorPrimary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1361,7 +1287,7 @@ class DonutChartPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     final paintBackground = Paint()
-      ..color = const Color(0xFF0F1524)
+      ..color = AppTheme.borderHighlightColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
 
