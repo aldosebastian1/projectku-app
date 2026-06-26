@@ -8,19 +8,38 @@ Dokumen ini menjelaskan fitur-fitur aplikasi **ProjectKu** dan cara menggunakann
 
 ```mermaid
 flowchart TD
-    A[🏠 Dashboard] -->|Tap kartu proyek| B[📋 Detail Proyek]
-    A -->|Tap tombol Tambah Project| C[➕ Tambah Proyek Baru]
-    B -->|Tap ikon edit| D[✏️ Edit Proyek Inline]
-    B -->|Tap Perbarui Status| E[⚡ Quick Status Picker]
-    C -->|Simpan| A
-    D -->|Simpan Perubahan| B
+    A[🔐 Login] -->|Masuk berhasil| B[🏠 Dashboard]
+    B -->|Tap kartu proyek| C[📋 Detail Proyek]
+    B -->|Tap tombol Tambah Project| D[➕ Tambah Proyek Baru]
+    C -->|Tap ikon edit| E[✏️ Edit Proyek Inline]
+    C -->|Tap Perbarui Status| F[⚡ Quick Status Picker]
+    D -->|Simpan| B
+    E -->|Simpan Perubahan| C
+    B -->|Logout| A
 ```
 
 ---
 
-## 1. 🏠 Dashboard
+## 1. 🔐 Login
 
-Halaman utama aplikasi yang terbuka saat pertama kali masuk.
+Halaman awal aplikasi yang muncul sebelum dashboard.
+
+### Cara Masuk
+- Masukkan email owner dan password yang sudah dibuat di Firebase Authentication.
+- Tekan tombol **Masuk**.
+- Jika login berhasil, aplikasi otomatis pindah ke dashboard.
+
+### Pesan Error
+- Email tidak valid
+- Password salah
+- Akun dinonaktifkan
+- Koneksi jaringan bermasalah
+
+---
+
+## 2. 🏠 Dashboard
+
+Halaman utama aplikasi yang terbuka setelah login berhasil.
 
 ### Kartu Ringkasan Keuangan
 Di bagian atas terdapat dua kartu informasi:
@@ -32,12 +51,14 @@ Di bagian atas terdapat dua kartu informasi:
 | **Proyek Aktif** | Jumlah proyek yang belum berstatus `Completed` |
 | **Ringkasan Project** | Total proyek, jumlah selesai, dan circular progress rate |
 
+Seluruh ringkasan hanya menghitung proyek milik akun yang sedang login.
+
 ### Filter Tab
 Gunakan tiga tab di atas daftar proyek untuk menyaring tampilan:
 
 | Tab | Menampilkan |
 |---|---|
-| **Semua** | Seluruh proyek tanpa terkecuali |
+| **Semua** | Seluruh proyek milik user aktif |
 | **Aktif** | Hanya proyek berstatus `In Progress` |
 | **Selesai** | Hanya proyek berstatus `Completed` |
 
@@ -60,9 +81,12 @@ Geser kartu proyek **ke kiri** untuk menampilkan tombol hapus merah. Konfirmasi 
 ### Tombol Tambah Project
 Tombol penuh di bagian bawah layar. Tap untuk membuka formulir tambah proyek baru.
 
+### Logout
+Tap ikon profil di kanan atas, lalu pilih **Keluar** untuk sign out dan kembali ke halaman login.
+
 ---
 
-## 2. ➕ Tambah Proyek Baru
+## 3. ➕ Tambah Proyek Baru
 
 Formulir untuk membuat entri proyek baru ke dalam database.
 
@@ -85,9 +109,11 @@ Formulir untuk membuat entri proyek baru ke dalam database.
 
 Tap **Simpan ke Database** untuk menyimpan. Data langsung muncul di dashboard secara real-time.
 
+Dokumen baru akan otomatis menyimpan `userId` milik akun yang sedang login.
+
 ---
 
-## 3. 📋 Detail Proyek
+## 4. 📋 Detail Proyek
 
 Halaman detail yang terbuka saat tap kartu proyek dari dashboard.
 
@@ -120,9 +146,11 @@ Tap tombol **Perbarui Status** untuk membuka bottom sheet cepat ganti:
 
 Perubahan langsung tersimpan ke Firestore tanpa perlu masuk mode edit.
 
+Jika pengguna lain membuka aplikasi, proyek ini tidak akan terlihat karena data dibatasi oleh `userId`.
+
 ---
 
-## 4. ✏️ Edit Proyek
+## 5. ✏️ Edit Proyek
 
 Tap ikon **pensil** di AppBar halaman detail untuk masuk ke mode edit inline.
 
@@ -137,7 +165,7 @@ Tap **Simpan Perubahan** untuk menyimpan. Tap ikon **✕** untuk membatalkan tan
 
 ---
 
-## 5. 🗑️ Hapus Proyek
+## 6. 🗑️ Hapus Proyek
 
 Proyek dapat dihapus dari dua tempat:
 1. **Dari dashboard** — geser kartu ke kiri (swipe-to-delete)
