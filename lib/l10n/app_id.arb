@@ -84,5 +84,8 @@
   "tugasChecklist": "Daftar Tugas / Milestone",
   "tambahTugas": "Tambah Tugas",
   "tugasHint": "Tulis nama tugas...",
-  "tugasKosong": "Belum ada tugas. Tambahkan tugas pertamamu di atas!"
+  "tugasKosong": "Belum ada tugas. Tambahkan tugas pertamamu di atas!",
+  "analitikKeuangan": "Analitik Keuangan",
+  "perbandinganPendapatan": "Status Pendapatan",
+  "pendapatan6Bulan": "Pendapatan Lunas: 6 Bulan Terakhir"
 }
