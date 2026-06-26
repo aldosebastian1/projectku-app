@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tugas/main.dart';
+import 'package:tugas/controllers/auth_controller.dart';
 import 'package:tugas/models/project_model.dart';
 import 'package:tugas/services/firestore_service.dart';
 
@@ -12,10 +13,13 @@ void main() {
   // Mock HTTP client to handle NetworkImage requests in tests
   HttpOverrides.global = MockHttpOverrides();
 
-  testWidgets('ProjectListView displays mock projects and dashboard totals', (WidgetTester tester) async {
+  testWidgets('ProjectListView displays mock projects and dashboard totals', (
+    WidgetTester tester,
+  ) async {
     final mockProjects = [
       Project(
         id: '1',
+        userId: 'owner-uid',
         name: 'Website Portfolio',
         clientName: 'Client A',
         budget: 5000000.0,
@@ -27,6 +31,7 @@ void main() {
       ),
       Project(
         id: '2',
+        userId: 'owner-uid',
         name: 'Landing Page Toko',
         clientName: 'Client B',
         budget: 3500000.0,
@@ -41,7 +46,10 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          projectsStreamProvider.overrideWith((ref) => Stream.value(mockProjects)),
+          authStateProvider.overrideWith((ref) => Stream.value(_FakeUser())),
+          projectsStreamProvider.overrideWith(
+            (ref) => Stream.value(mockProjects),
+          ),
         ],
         child: const MyApp(locale: Locale('id')),
       ),
@@ -69,6 +77,14 @@ void main() {
   });
 }
 
+class _FakeUser implements User {
+  @override
+  String get uid => 'owner-uid';
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 class MockHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -78,7 +94,12 @@ class MockHttpOverrides extends HttpOverrides {
 
 class _MockHttpClient implements HttpClient {
   @override
-  Future<HttpClientRequest> open(String method, String host, int port, String path) {
+  Future<HttpClientRequest> open(
+    String method,
+    String host,
+    int port,
+    String path,
+  ) {
     return Future.value(_MockHttpClientRequest());
   }
 
@@ -88,7 +109,8 @@ class _MockHttpClient implements HttpClient {
   }
 
   @override
-  Future<HttpClientRequest> get(String host, int port, String path) => open('get', host, port, path);
+  Future<HttpClientRequest> get(String host, int port, String path) =>
+      open('get', host, port, path);
 
   @override
   Future<HttpClientRequest> getUrl(Uri url) => openUrl('get', url);
@@ -121,15 +143,77 @@ class _MockHttpHeaders implements HttpHeaders {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _MockHttpClientResponse extends Stream<List<int>> implements HttpClientResponse {
+class _MockHttpClientResponse extends Stream<List<int>>
+    implements HttpClientResponse {
   // Transparent 1x1 PNG image bytes
   static const List<int> _transparentImage = [
-    0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D,
-    0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-    0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4, 0x89, 0x00, 0x00, 0x00,
-    0x0D, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
-    0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00, 0x00, 0x00, 0x00, 0x49,
-    0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x48,
+    0x44,
+    0x52,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x08,
+    0x06,
+    0x00,
+    0x00,
+    0x00,
+    0x1F,
+    0x15,
+    0xC4,
+    0x89,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x44,
+    0x41,
+    0x54,
+    0x78,
+    0x9C,
+    0x63,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x05,
+    0x00,
+    0x01,
+    0x0D,
+    0x0A,
+    0x2D,
+    0xB4,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4E,
+    0x44,
+    0xAE,
+    0x42,
+    0x60,
+    0x82,
   ];
 
   @override
