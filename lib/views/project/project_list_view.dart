@@ -643,15 +643,12 @@ class ProjectListView extends ConsumerWidget {
     final paymentColor = _getPaymentColor(project.paymentStatus);
     final isOverdue = project.dueDate.isBefore(DateTime.now()) && project.status != 'Completed';
 
-    // Calculate urgency percentage for progress indicator
-    final totalDays = project.dueDate.difference(project.createdAt).inDays;
     final remainingDays = project.dueDate.difference(DateTime.now()).inDays;
-    double timeProgress = 0.0;
-    if (totalDays > 0) {
-      timeProgress = ((totalDays - remainingDays) / totalDays).clamp(0.0, 1.0);
-    } else {
-      timeProgress = 1.0;
-    }
+    
+    // Calculate task progress
+    final totalTasks = project.tasks.length;
+    final completedTasks = project.tasks.where((t) => t.isCompleted).length;
+    final double taskProgress = totalTasks > 0 ? completedTasks / totalTasks : 0.0;
 
     return Dismissible(
       key: Key(project.id),
@@ -781,7 +778,7 @@ class ProjectListView extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      project.status == 'Completed' ? l10n.timeProgressCompleted : l10n.timeProgressPercent((timeProgress * 100).toInt()),
+                      project.status == 'Completed' ? l10n.timeProgressCompleted : l10n.timeProgressPercent((taskProgress * 100).toInt()),
                       style: TextStyle(
                         fontSize: 10,
                         color: project.status == 'Completed' ? AppTheme.secondaryColor : AppTheme.textColorSecondary,
@@ -794,7 +791,7 @@ class ProjectListView extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
-                    value: project.status == 'Completed' ? 1.0 : timeProgress,
+                    value: project.status == 'Completed' ? 1.0 : taskProgress,
                     minHeight: 4,
                     backgroundColor: const Color(0xFF0F1524),
                     valueColor: AlwaysStoppedAnimation<Color>(
