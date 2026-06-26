@@ -1,0 +1,77 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# -------------------------------------------------------------------------
+# Custom Exclusions (Firebase, Security, & Dependencies)
+# -------------------------------------------------------------------------
+
+# Firebase config files (contains sensitive API keys)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+firebase.json
+# lib/firebase_options.dart # (Hapus tanda pagar di depan jika Anda ingin menyembunyikan file ini dari GitHub)
+
+# Keystores & Security properties (Sangat penting agar kunci rilis Android tidak bocor)
+*.jks
+*.keystore
+android/key.properties
+
+# Environment Variables
+.env
+.env.*
+
+# iOS/macOS Pods & Symlinks (diunduh otomatis oleh CocoaPods, tidak perlu di-push)
+ios/Pods/
+macos/Pods/
+.symlinks/
+
+# AI Agents & Skills Configuration (Kustomisasi lokal, tidak perlu masuk GitHub)
+.agents/
+agent/
+skills-lock.json
+
+mvc.txt
