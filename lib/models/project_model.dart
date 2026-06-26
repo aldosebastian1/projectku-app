@@ -4,15 +4,9 @@ class ProjectTask {
   final String title;
   final bool isCompleted;
 
-  ProjectTask({
-    required this.title,
-    this.isCompleted = false,
-  });
+  ProjectTask({required this.title, this.isCompleted = false});
 
-  ProjectTask copyWith({
-    String? title,
-    bool? isCompleted,
-  }) {
+  ProjectTask copyWith({String? title, bool? isCompleted}) {
     return ProjectTask(
       title: title ?? this.title,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -20,10 +14,7 @@ class ProjectTask {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'isCompleted': isCompleted,
-    };
+    return {'title': title, 'isCompleted': isCompleted};
   }
 
   factory ProjectTask.fromMap(Map<String, dynamic> map) {
@@ -36,6 +27,7 @@ class ProjectTask {
 
 class Project {
   final String id;
+  final String userId;
   final String name;
   final String clientName;
   final double budget;
@@ -48,6 +40,7 @@ class Project {
 
   Project({
     required this.id,
+    required this.userId,
     required this.name,
     required this.clientName,
     required this.budget,
@@ -61,6 +54,7 @@ class Project {
 
   Project copyWith({
     String? id,
+    String? userId,
     String? name,
     String? clientName,
     double? budget,
@@ -73,6 +67,7 @@ class Project {
   }) {
     return Project(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       name: name ?? this.name,
       clientName: clientName ?? this.clientName,
       budget: budget ?? this.budget,
@@ -87,6 +82,7 @@ class Project {
 
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'name': name,
       'clientName': clientName,
       'budget': budget,
@@ -102,6 +98,7 @@ class Project {
   factory Project.fromMap(Map<String, dynamic> map, String documentId) {
     return Project(
       id: documentId,
+      userId: map['userId'] ?? '',
       name: map['name'] ?? '',
       clientName: map['clientName'] ?? '',
       budget: (map['budget'] as num?)?.toDouble() ?? 0.0,
@@ -110,8 +107,11 @@ class Project {
       paymentStatus: map['paymentStatus'] ?? 'Unpaid',
       description: map['description'] ?? '',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      tasks: (map['tasks'] as List<dynamic>?)
-              ?.map((t) => ProjectTask.fromMap(Map<String, dynamic>.from(t as Map)))
+      tasks:
+          (map['tasks'] as List<dynamic>?)
+              ?.map(
+                (t) => ProjectTask.fromMap(Map<String, dynamic>.from(t as Map)),
+              )
               .toList() ??
           const [],
     );
