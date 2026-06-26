@@ -3,6 +3,8 @@ import '../widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../controllers/auth_controller.dart';
 import '../../services/firestore_service.dart';
 import '../../utils/theme.dart';
 import '../../utils/format_rupiah.dart';
@@ -20,15 +22,13 @@ class ProjectFilterNotifier extends Notifier<String> {
   }
 }
 
-final projectFilterProvider = NotifierProvider<ProjectFilterNotifier, String>(() {
-  return ProjectFilterNotifier();
-});
+final projectFilterProvider = NotifierProvider<ProjectFilterNotifier, String>(
+  () {
+    return ProjectFilterNotifier();
+  },
+);
 
-enum ProjectSortOption {
-  dueDateAsc,
-  budgetDesc,
-  createdAtDesc,
-}
+enum ProjectSortOption { dueDateAsc, budgetDesc, createdAtDesc }
 
 class ProjectSearchNotifier extends Notifier<String> {
   @override
@@ -39,9 +39,11 @@ class ProjectSearchNotifier extends Notifier<String> {
   }
 }
 
-final projectSearchProvider = NotifierProvider<ProjectSearchNotifier, String>(() {
-  return ProjectSearchNotifier();
-});
+final projectSearchProvider = NotifierProvider<ProjectSearchNotifier, String>(
+  () {
+    return ProjectSearchNotifier();
+  },
+);
 
 class ProjectSortNotifier extends Notifier<ProjectSortOption> {
   @override
@@ -52,19 +54,25 @@ class ProjectSortNotifier extends Notifier<ProjectSortOption> {
   }
 }
 
-final projectSortProvider = NotifierProvider<ProjectSortNotifier, ProjectSortOption>(() {
-  return ProjectSortNotifier();
-});
+final projectSortProvider =
+    NotifierProvider<ProjectSortNotifier, ProjectSortOption>(() {
+      return ProjectSortNotifier();
+    });
 
 class ProjectListView extends ConsumerWidget {
   const ProjectListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final projectsAsync = ref.watch(projectsStreamProvider);
+    final authAsync = ref.watch(authStateProvider);
     final controller = ref.watch(projectListControllerProvider);
     final currentFilter = ref.watch(projectFilterProvider);
     final l10n = AppLocalizations.of(context)!;
+    final currentUser = authAsync.asData?.value;
+
+    final projectsAsync = currentUser == null
+        ? const AsyncValue<List<Project>>.loading()
+        : ref.watch(projectsStreamProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,15 +85,36 @@ class ProjectListView extends ConsumerWidget {
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            width: 36,
-            height: 36,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage('https://i.pravatar.cc/150?img=47'),
-                fit: BoxFit.cover,
+          PopupMenuButton<String>(
+            tooltip: 'Akun',
+            onSelected: (value) {
+              if (value == 'logout') {
+                ref.read(authControllerProvider.notifier).signOut();
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem<String>(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_rounded, size: 18),
+                    SizedBox(width: 12),
+                    Text('Keluar'),
+                  ],
+                ),
+              ),
+            ],
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.person_outline_rounded,
+                color: AppTheme.primaryColor,
               ),
             ),
           ),
@@ -93,7 +122,9 @@ class ProjectListView extends ConsumerWidget {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480), // Responsive Max Width for Calm Workspace
+          constraints: const BoxConstraints(
+            maxWidth: 480,
+          ), // Responsive Max Width for Calm Workspace
           child: projectsAsync.when(
             data: (projects) {
               if (projects.isEmpty) {
@@ -106,13 +137,20 @@ class ProjectListView extends ConsumerWidget {
                 );
               }
 
-              final searchQuery = ref.watch(projectSearchProvider).trim().toLowerCase();
+              final searchQuery = ref
+                  .watch(projectSearchProvider)
+                  .trim()
+                  .toLowerCase();
               final sortOption = ref.watch(projectSortProvider);
 
               // 1. Filter by status
               var processedProjects = projects.where((project) {
-                if (currentFilter == 'In Progress') return project.status == 'In Progress';
-                if (currentFilter == 'Completed') return project.status == 'Completed';
+                if (currentFilter == 'In Progress') {
+                  return project.status == 'In Progress';
+                }
+                if (currentFilter == 'Completed') {
+                  return project.status == 'Completed';
+                }
                 return true; // All
               }).toList();
 
@@ -127,22 +165,33 @@ class ProjectListView extends ConsumerWidget {
               // 3. Sort projects
               switch (sortOption) {
                 case ProjectSortOption.dueDateAsc:
-                  processedProjects.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+                  processedProjects.sort(
+                    (a, b) => a.dueDate.compareTo(b.dueDate),
+                  );
                   break;
                 case ProjectSortOption.budgetDesc:
-                  processedProjects.sort((a, b) => b.budget.compareTo(a.budget));
+                  processedProjects.sort(
+                    (a, b) => b.budget.compareTo(a.budget),
+                  );
                   break;
                 case ProjectSortOption.createdAtDesc:
-                  processedProjects.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+                  processedProjects.sort(
+                    (a, b) => b.createdAt.compareTo(a.createdAt),
+                  );
                   break;
               }
 
-              return _buildDashboardContent(context, projects, processedProjects, controller, ref, currentFilter);
+              return _buildDashboardContent(
+                context,
+                projects,
+                processedProjects,
+                controller,
+                ref,
+                currentFilter,
+              );
             },
             loading: () => const Center(
-              child: CircularProgressIndicator(
-                color: AppTheme.primaryColor,
-              ),
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
             ),
             error: (err, stack) => Center(
               child: Padding(
@@ -150,11 +199,17 @@ class ProjectListView extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline_rounded, size: 64, color: AppTheme.errorColor),
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 64,
+                      color: AppTheme.errorColor,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Koneksi Firebase Terganggu',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
@@ -177,7 +232,9 @@ class ProjectListView extends ConsumerWidget {
             onPressed: () => context.push('/add'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               minimumSize: const Size(double.infinity, 56),
             ),
             child: const Row(
@@ -185,7 +242,14 @@ class ProjectListView extends ConsumerWidget {
               children: [
                 Icon(Icons.add, color: Colors.white),
                 SizedBox(width: 8),
-                Text('Tambah Project', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(
+                  'Tambah Project',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
@@ -241,10 +305,7 @@ class ProjectListView extends ConsumerWidget {
 
     if (isFullScreen) {
       return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: content,
-        ),
+        child: Padding(padding: const EdgeInsets.all(32.0), child: content),
       );
     } else {
       return Container(
@@ -301,9 +362,9 @@ class ProjectListView extends ConsumerWidget {
           Text(
             "Dashboard",
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 30, // Calm Workspace clean display size
-                ),
+              fontWeight: FontWeight.w700,
+              fontSize: 30, // Calm Workspace clean display size
+            ),
           ),
           const SizedBox(height: 24),
           // Search & Sort Bar
@@ -311,12 +372,23 @@ class ProjectListView extends ConsumerWidget {
             children: [
               Expanded(
                 child: TextField(
-                  onChanged: (val) => ref.read(projectSearchProvider.notifier).setSearch(val),
-                  style: const TextStyle(fontSize: 14, color: AppTheme.textColorPrimary),
+                  onChanged: (val) =>
+                      ref.read(projectSearchProvider.notifier).setSearch(val),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppTheme.textColorPrimary,
+                  ),
                   decoration: InputDecoration(
                     hintText: l10n.searchHint,
-                    prefixIcon: const Icon(Icons.search_rounded, size: 20, color: AppTheme.textColorSecondary),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      size: 20,
+                      color: AppTheme.textColorSecondary,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
               ),
@@ -332,7 +404,11 @@ class ProjectListView extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AppTheme.borderHighlightColor),
                   ),
-                  child: const Icon(Icons.swap_vert_rounded, color: AppTheme.primaryColor, size: 20),
+                  child: const Icon(
+                    Icons.swap_vert_rounded,
+                    color: AppTheme.primaryColor,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
@@ -388,7 +464,9 @@ class ProjectListView extends ConsumerWidget {
             children: [
               Text(
                 l10n.daftarProyek,
-                style: Theme.of(context).textTheme.headlineMedium, // Headline Medium for section headings
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium, // Headline Medium for section headings
               ),
               Text(
                 l10n.activeProjectsCount(filteredProjects.length),
@@ -409,10 +487,14 @@ class ProjectListView extends ConsumerWidget {
               icon: Icons.filter_list_off_rounded,
               title: currentFilter == 'Completed'
                   ? l10n.filterEmptyCompletedTitle
-                  : (currentFilter == 'In Progress' ? l10n.filterEmptyInProgressTitle : l10n.filterEmptyGenericTitle),
+                  : (currentFilter == 'In Progress'
+                        ? l10n.filterEmptyInProgressTitle
+                        : l10n.filterEmptyGenericTitle),
               subtitle: currentFilter == 'Completed'
                   ? l10n.filterEmptyCompletedSubtitle
-                  : (currentFilter == 'In Progress' ? l10n.filterEmptyInProgressSubtitle : l10n.filterEmptyGenericSubtitle),
+                  : (currentFilter == 'In Progress'
+                        ? l10n.filterEmptyInProgressSubtitle
+                        : l10n.filterEmptyGenericSubtitle),
               isFullScreen: false,
             )
           else
@@ -444,33 +526,55 @@ class ProjectListView extends ConsumerWidget {
       child: Row(
         children: [
           _buildFilterTab(ref, 'All', l10n.tabAll, currentFilter == 'All'),
-          _buildFilterTab(ref, 'In Progress', l10n.tabInProgress, currentFilter == 'In Progress'),
-          _buildFilterTab(ref, 'Completed', l10n.tabCompleted, currentFilter == 'Completed'),
+          _buildFilterTab(
+            ref,
+            'In Progress',
+            l10n.tabInProgress,
+            currentFilter == 'In Progress',
+          ),
+          _buildFilterTab(
+            ref,
+            'Completed',
+            l10n.tabCompleted,
+            currentFilter == 'Completed',
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFilterTab(WidgetRef ref, String filterKey, String label, bool isSelected) {
+  Widget _buildFilterTab(
+    WidgetRef ref,
+    String filterKey,
+    String label,
+    bool isSelected,
+  ) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => ref.read(projectFilterProvider.notifier).setFilter(filterKey),
+        onTap: () =>
+            ref.read(projectFilterProvider.notifier).setFilter(filterKey),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.transparent, // Active White
+            color: isSelected
+                ? Colors.white
+                : Colors.transparent, // Active White
             borderRadius: BorderRadius.circular(10), // Inner Radius
             border: Border.all(
-              color: isSelected ? AppTheme.borderHighlightColor : Colors.transparent,
+              color: isSelected
+                  ? AppTheme.borderHighlightColor
+                  : Colors.transparent,
             ),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03), // Level 1 Elevation
+                      color: Colors.black.withValues(
+                        alpha: 0.03,
+                      ), // Level 1 Elevation
                       blurRadius: 20,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ]
                 : null,
           ),
@@ -480,7 +584,9 @@ class ProjectListView extends ConsumerWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              color: isSelected ? AppTheme.primaryColor : AppTheme.textColorSecondary,
+              color: isSelected
+                  ? AppTheme.primaryColor
+                  : AppTheme.textColorSecondary,
             ),
           ),
         ),
@@ -493,12 +599,18 @@ class ProjectListView extends ConsumerWidget {
     Project project,
     ProjectListController controller,
   ) {
-    final isOverdue = project.dueDate.isBefore(DateTime.now()) && project.status != 'Completed';
+    final isOverdue =
+        project.dueDate.isBefore(DateTime.now()) &&
+        project.status != 'Completed';
     final totalTasks = project.tasks.length;
     final completedTasks = project.tasks.where((t) => t.isCompleted).length;
-    final double taskProgress = totalTasks > 0 ? completedTasks / totalTasks : 0.0;
+    final double taskProgress = totalTasks > 0
+        ? completedTasks / totalTasks
+        : 0.0;
 
-    final initials = project.name.isNotEmpty ? project.name[0].toUpperCase() : '?';
+    final initials = project.name.isNotEmpty
+        ? project.name[0].toUpperCase()
+        : '?';
 
     return Dismissible(
       key: Key(project.id),
@@ -510,24 +622,47 @@ class ProjectListView extends ConsumerWidget {
           color: AppTheme.errorAccent,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 28),
+        child: const Icon(
+          Icons.delete_sweep_rounded,
+          color: Colors.white,
+          size: 28,
+        ),
       ),
       confirmDismiss: (direction) async {
         return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             backgroundColor: AppTheme.cardColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-            title: Text('Hapus Proyek?', style: Theme.of(context).textTheme.titleLarge),
-            content: Text('Apakah Anda yakin ingin menghapus proyek "${project.name}" secara permanen?'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            title: Text(
+              'Hapus Proyek?',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            content: Text(
+              'Apakah Anda yakin ingin menghapus proyek "${project.name}" secara permanen?',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Batal', style: TextStyle(color: AppTheme.textColorSecondary, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Batal',
+                  style: TextStyle(
+                    color: AppTheme.textColorSecondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Hapus', style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Hapus',
+                  style: TextStyle(
+                    color: AppTheme.errorColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -609,7 +744,9 @@ class ProjectListView extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: CustomProgressBar(
-                          percentage: project.status == 'Completed' ? 1.0 : taskProgress,
+                          percentage: project.status == 'Completed'
+                              ? 1.0
+                              : taskProgress,
                           isOverdue: isOverdue,
                         ),
                       ),
@@ -633,8 +770,6 @@ class ProjectListView extends ConsumerWidget {
     );
   }
 
-
-
   void _showSortOptions(BuildContext context, WidgetRef ref) {
     final currentSort = ref.read(projectSortProvider);
     final l10n = AppLocalizations.of(context)!;
@@ -654,7 +789,11 @@ class ProjectListView extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.sort_rounded, color: AppTheme.primaryColor, size: 24),
+                    const Icon(
+                      Icons.sort_rounded,
+                      color: AppTheme.primaryColor,
+                      size: 24,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       l10n.sortTitle,
@@ -665,7 +804,10 @@ class ProjectListView extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Text(
                   l10n.sortSubtitle,
-                  style: const TextStyle(fontSize: 13, color: AppTheme.textColorSecondary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.textColorSecondary,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 _buildSortOptionItem(
@@ -721,7 +863,9 @@ class ProjectListView extends ConsumerWidget {
               : AppTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.4) : AppTheme.borderHighlightColor,
+            color: isSelected
+                ? AppTheme.primaryColor.withValues(alpha: 0.4)
+                : AppTheme.borderHighlightColor,
             width: 1.5,
           ),
         ),
@@ -733,18 +877,27 @@ class ProjectListView extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                color: isSelected ? AppTheme.primaryColor : AppTheme.textColorPrimary,
+                color: isSelected
+                    ? AppTheme.primaryColor
+                    : AppTheme.textColorPrimary,
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle_rounded, color: AppTheme.primaryColor, size: 20),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppTheme.primaryColor,
+                size: 20,
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFinancialAnalyticsCard(BuildContext context, List<Project> projects) {
+  Widget _buildFinancialAnalyticsCard(
+    BuildContext context,
+    List<Project> projects,
+  ) {
     double totalPaid = 0.0;
     double totalPending = 0.0;
     int completedCount = 0;
@@ -763,7 +916,9 @@ class ProjectListView extends ConsumerWidget {
       }
     }
     final totalProject = projects.length;
-    final double completionRate = totalProject > 0 ? (completedCount / totalProject) : 0.0;
+    final double completionRate = totalProject > 0
+        ? (completedCount / totalProject)
+        : 0.0;
 
     return Column(
       children: [
@@ -790,7 +945,11 @@ class ProjectListView extends ConsumerWidget {
                       color: AppTheme.textColorSecondary,
                     ),
                   ),
-                  const Icon(Icons.work_outline_rounded, color: AppTheme.textColorSecondary, size: 18),
+                  const Icon(
+                    Icons.work_outline_rounded,
+                    color: AppTheme.textColorSecondary,
+                    size: 18,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -824,9 +983,22 @@ class ProjectListView extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Tagihan Tertunda', style: TextStyle(fontSize: 11, color: AppTheme.textColorSecondary)),
+                              const Text(
+                                'Tagihan Tertunda',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppTheme.textColorSecondary,
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text(formatRupiah(totalPending), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.textColorPrimary)),
+                              Text(
+                                formatRupiah(totalPending),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textColorPrimary,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -849,9 +1021,22 @@ class ProjectListView extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Proyek Aktif', style: TextStyle(fontSize: 11, color: AppTheme.textColorSecondary)),
+                              const Text(
+                                'Proyek Aktif',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppTheme.textColorSecondary,
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text('$activeCount', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.textColorPrimary)),
+                              Text(
+                                '$activeCount',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textColorPrimary,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -891,17 +1076,43 @@ class ProjectListView extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Total Project', style: TextStyle(fontSize: 12, color: AppTheme.textColorSecondary)),
+                      const Text(
+                        'Total Project',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textColorSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text('$totalProject', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textColorPrimary)),
+                      Text(
+                        '$totalProject',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textColorPrimary,
+                        ),
+                      ),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Selesai', style: TextStyle(fontSize: 12, color: AppTheme.textColorSecondary)),
+                      const Text(
+                        'Selesai',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textColorSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text('$completedCount', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textColorPrimary)),
+                      Text(
+                        '$completedCount',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textColorPrimary,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -914,11 +1125,17 @@ class ProjectListView extends ConsumerWidget {
                           value: completionRate,
                           strokeWidth: 6,
                           backgroundColor: AppTheme.border,
-                          valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryColor,
+                          ),
                         ),
                         Text(
                           '${(completionRate * 100).toInt()}%',
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textColorPrimary),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textColorPrimary,
+                          ),
                         ),
                       ],
                     ),
@@ -931,8 +1148,6 @@ class ProjectListView extends ConsumerWidget {
       ],
     );
   }
-
-
 
   Widget _buildMetricCard({
     required String title,
@@ -953,9 +1168,7 @@ class ProjectListView extends ConsumerWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(icon, size: 20, color: iconColor),
-            ],
+            children: [Icon(icon, size: 20, color: iconColor)],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1033,8 +1246,13 @@ class DonutChartPainter extends CustomPainter {
     }
 
     final double totalPercentage = paidPercentage + pendingPercentage;
-    final double paidAngle = (paidPercentage / totalPercentage) * 2 * 3.14159265 * animationProgress;
-    final double pendingAngle = (pendingPercentage / totalPercentage) * 2 * 3.14159265 * animationProgress;
+    final double paidAngle =
+        (paidPercentage / totalPercentage) * 2 * 3.14159265 * animationProgress;
+    final double pendingAngle =
+        (pendingPercentage / totalPercentage) *
+        2 *
+        3.14159265 *
+        animationProgress;
 
     double startAngle = -3.14159265 / 2;
 
