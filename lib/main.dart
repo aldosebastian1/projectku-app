@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'ProjectKu',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.calmTheme,
       routerConfig: goRouter,
       locale: locale,
       localizationsDelegates: const [
