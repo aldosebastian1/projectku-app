@@ -9,7 +9,7 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase Firestore with platform options
   try {
     await Firebase.initializeApp(
@@ -19,24 +19,20 @@ void main() async {
     debugPrint("Firebase initialization info: $e");
   }
 
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   final Locale? locale;
   const MyApp({super.key, this.locale});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       title: 'ProjectKu',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.calmTheme,
-      routerConfig: goRouter,
+      routerConfig: ref.watch(goRouterProvider),
       locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
