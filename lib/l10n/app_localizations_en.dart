@@ -247,4 +247,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveChangesSuccess => 'Project changes successfully saved';
+
+  @override
+  String get errorLoadDetail => 'Failed to load project details';
+
+  @override
+  String get tenggatWaktu => 'Due Date';
+
+  @override
+  String get sisaWaktu => 'Time Remaining';
+
+  @override
+  String get deskripsiProyek => 'Project Description / Notes';
+
+  @override
+  String get noNotes => 'No additional notes.';
+
+  @override
+  String get quickUpdateSheetTitle => 'Update Project Status';
+
+  @override
+  String get quickUpdateSheetSubtitle =>
+      'Quickly update work or payment status.';
+
+  @override
+  String get timeRemainingOverdue => 'Deadline has passed';
 }
