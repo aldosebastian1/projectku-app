@@ -371,7 +371,7 @@ class ProjectListView extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(24),
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -1000,14 +1000,14 @@ class ProjectListView extends ConsumerWidget {
         ref.read(projectSortProvider.notifier).setSort(option);
         Navigator.pop(context);
       },
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected
               ? AppTheme.primaryColor.withValues(alpha: 0.1)
               : const Color(0xFF0F1524),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.4) : const Color(0x0CFFFFFF),
             width: 1.5,
@@ -1077,7 +1077,7 @@ class ProjectListView extends ConsumerWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0x0CFFFFFF)),
       ),
       child: Column(
@@ -1291,12 +1291,15 @@ class ProjectListView extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textColorPrimary,
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textColorPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 6),
