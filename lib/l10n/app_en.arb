@@ -362,5 +362,21 @@
   "timeRemainingOverdue": "Deadline has passed",
   "@timeRemainingOverdue": {
     "description": "Remaining time when deadline has passed"
+  },
+  "tugasChecklist": "Task Checklist / Milestones",
+  "@tugasChecklist": {
+    "description": "Task checklist card header"
+  },
+  "tambahTugas": "Add Task",
+  "@tambahTugas": {
+    "description": "Add task button label"
+  },
+  "tugasHint": "Write task title...",
+  "@tugasHint": {
+    "description": "Add task textfield hint"
+  },
+  "tugasKosong": "No tasks yet. Add your first task above!",
+  "@tugasKosong": {
+    "description": "Empty tasks list message"
   }
 }
