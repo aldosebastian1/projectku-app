@@ -613,6 +613,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tasks yet. Add your first task above!'**
   String get tugasKosong;
+
+  /// Financial analytics section header
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Analytics'**
+  String get analitikKeuangan;
+
+  /// Income comparison title
+  ///
+  /// In en, this message translates to:
+  /// **'Income Status'**
+  String get perbandinganPendapatan;
+
+  /// Bar chart title for monthly incomes
+  ///
+  /// In en, this message translates to:
+  /// **'Paid Income: Last 6 Months'**
+  String get pendapatan6Bulan;
 }
 
 class _AppLocalizationsDelegate
