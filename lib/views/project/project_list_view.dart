@@ -59,11 +59,6 @@ class ProjectListView extends ConsumerWidget {
   const ProjectListView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink(); // Not used directly, but we define below
-  }
-
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final projectsAsync = ref.watch(projectsStreamProvider);
     final controller = ref.watch(projectListControllerProvider);
@@ -643,6 +638,7 @@ class ProjectListView extends ConsumerWidget {
     Project project,
     ProjectListController controller,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final statusColor = _getStatusColor(project.status);
     final paymentColor = _getPaymentColor(project.paymentStatus);
     final isOverdue = project.dueDate.isBefore(DateTime.now()) && project.status != 'Completed';
