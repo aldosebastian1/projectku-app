@@ -1,77 +1,632 @@
-# 💎 UI/UX Design System Documentation — ProjectKu
+# 💎 UI/UX Design System Documentation — ProjectKu v4
 
-This document serves as the comprehensive UI/UX reference manual for the **ProjectKu (Freelancer Workspace)** application. It defines the visual foundations, custom widget component architectures, and responsive layout guidelines applied to achieve a premium, high-contrast, and clean interface.
+## Calm Workspace Edition
 
----
+This document serves as the comprehensive UI/UX reference manual for **ProjectKu (Freelancer Workspace)**.
 
-## 🎨 1. Visual Token Foundations
+The visual direction is inspired by calm productivity applications and editorial interfaces that prioritize:
 
-We use a curated, non-generic dark palette to avoid typical "template-like" visual aesthetics.
+* breathing room,
+* soft contrast,
+* minimal hierarchy,
+* low visual noise,
+* premium simplicity.
 
-### Color Palette
-*   **Deep Base Background:** `0xFF0A0F1D` (Ultra deep slate-black used for scaffolds).
-*   **Card & Surface Background:** `0xFF151D30` (Muted dark navy-blue card containers).
-*   **Text Primary:** `0xFFF8FAFC` (Slate-white high readability headings).
-*   **Text Secondary:** `0xFF64748B` (Cool slate-grey description text).
-*   **Sky Blue Accent:** `0xFF38BDF8` (Sky blue primary brand elements, active focus, and "In Progress" badges).
-*   **Mint Emerald Accent:** `0xFF34D399` (Mint green used for "Paid" financial highlights and "Completed" badges).
-*   **Warm Amber Warning:** `0xFFFBBF24` (Warm warning color used for "Invoice Sent" and "On Hold" statuses).
-*   **Soft Rose Red Error:** `0xFFF87171` (Rose red warning color used for "Unpaid" items and overdue alerts).
+The interface should feel like:
 
-### Typography Scale (Outfit Font)
-*   **Headline Large:** `32pt`, weight `w900`, tracking `-0.8` (Dashboard/Welcome title).
-*   **Headline Medium:** `24pt`, weight `bold`, tracking `-0.5` (Section headings).
-*   **Title Large:** `18pt`, weight `bold` (List item headings, modal dialog titles).
-*   **Body Large:** `16pt`, weight `normal` (Default text sizes).
-*   **Body Medium:** `14pt`, weight `normal`, color slate-grey (Secondary info, descriptions).
+> **a tool you use every day for hours without visual fatigue.**
 
-### Spacing & Corner Radii
-*   **Unified Corner Radii:** Cards use `borderRadius: 24`, choice selectors use `borderRadius: 16`.
-*   **Padding Scale:** Unified using increments of `4` (`4`, `8`, `12`, `14`, `16`, `20`, `24`, `32`, `48`).
+It should not feel like:
+
+* fintech dashboard
+* cyberpunk interface
+* AI generated Dribbble concept
+* startup landing page
 
 ---
 
-## 🏗️ 2. Component Architecture & Screens
+# 🎨 1. Visual Token Foundations
+
+## Design Philosophy
+
+The reference interface follows four principles:
+
+### Soft Contrast
+
+No pure black and no pure white.
+
+### Monochromatic Surfaces
+
+Most elements belong to one color family.
+
+### Extremely Low Visual Noise
+
+Almost no shadows, gradients, or glowing effects.
+
+### Generous White Space
+
+Spacing creates hierarchy instead of colors.
+
+---
+
+# Color System
+
+## Base Background
+
+```dart
+Color(0xFFF2F5F9)
+```
+
+Soft neutral grey.
+
+Never use pure white.
+
+---
+
+## Surface Background
+
+```dart
+Color(0xFFF7F9FC)
+```
+
+Used for:
+
+* cards
+* sections
+* input containers.
+
+---
+
+## Elevated Surface
+
+```dart
+Color(0xFFFFFFFF)
+```
+
+Used only for:
+
+* active cards
+* dialogs
+* bottom sheets.
+
+---
+
+## Border
+
+```dart
+Color(0xFFE8EDF3)
+```
+
+Used for:
+
+* dividers
+* segmented controls
+* inputs.
+
+---
+
+# Typography Colors
+
+## Text Primary
+
+```dart
+Color(0xFF111827)
+```
+
+---
+
+## Text Secondary
+
+```dart
+Color(0xFF6B7280)
+```
+
+---
+
+## Text Tertiary
+
+```dart
+Color(0xFF9CA3AF)
+```
+
+---
+
+# Accent System
+
+The reference image uses almost no accent colors.
+
+## Primary Accent
+
+```dart
+Color(0xFF5C7CFA)
+```
+
+Usage:
+
+* active tabs
+* focused state
+* primary button.
+
+Maximum usage:
+
+```text
+10%
+```
+
+---
+
+## Success Accent
+
+```dart
+Color(0xFF6FCF97)
+```
+
+Used only for:
+
+* positive statistics
+* small indicators.
+
+---
+
+## Warning Accent
+
+```dart
+Color(0xFFF2C94C)
+```
+
+---
+
+## Error Accent
+
+```dart
+Color(0xFFEB5757)
+```
+
+---
+
+# Color Ratio
+
+```text
+85% Neutral
+10% Primary
+5% Semantic
+```
+
+This ratio is the reason why the reference feels calm.
+
+---
+
+# 🔠 2. Typography System
+
+## Font Family
+
+```text
+Inter
+SF Pro Display
+Outfit
+```
+
+Prefer:
+
+```text
+Inter
+```
+
+because it matches the reference.
+
+---
+
+| Style          | Size | Weight |
+| -------------- | ---- | ------ |
+| Display Large  | 34   | w700   |
+| Heading Large  | 28   | w600   |
+| Heading Medium | 22   | w600   |
+| Title          | 18   | w600   |
+| Body           | 16   | w400   |
+| Caption        | 14   | w400   |
+| Small          | 12   | w400   |
+
+---
+
+# Typography Philosophy
+
+The reference rarely uses bold typography.
+
+Most text is:
+
+```text
+400
+500
+600
+```
+
+Almost never:
+
+```text
+800
+900
+```
+
+because heavy weights make the interface aggressive.
+
+---
+
+# 📏 3. Spacing System
+
+The strongest characteristic of the reference is spacing.
+
+---
+
+## Scale
+
+```text
+4
+8
+12
+16
+24
+32
+48
+64
+```
+
+---
+
+## Layout Rule
+
+Between sections:
+
+```text
+32px
+```
+
+Between cards:
+
+```text
+16px
+```
+
+Between content inside cards:
+
+```text
+24px
+```
+
+---
+
+# Corner Radius System
+
+## Card
+
+```text
+24
+```
+
+---
+
+## Input
+
+```text
+16
+```
+
+---
+
+## Segmented Control
+
+```text
+14
+```
+
+---
+
+## Small Chip
+
+```text
+12
+```
+
+---
+
+# 🌑 4. Elevation System
+
+The reference barely uses shadows.
+
+---
+
+## Level 1
+
+```dart
+BoxShadow(
+  color: Colors.black.withOpacity(.03),
+  blurRadius: 20,
+  offset: Offset(0,4),
+)
+```
+
+---
+
+## Level 2
+
+```dart
+BoxShadow(
+  color: Colors.black.withOpacity(.05),
+  blurRadius: 24,
+  offset: Offset(0,8),
+)
+```
+
+No glow.
+
+No large shadows.
+
+No colored shadows.
+
+---
+
+# 🏗️ 5. Component Architecture
 
 ```mermaid
 graph TD
-    A[Scaffold Scaffold] --> B[App Bar with Branding & Sync Status]
-    A --> C[Responsive Constrained Container max 850]
-    C --> D[Unified Gradient Hero Card - Wallet Style]
-    C --> E[Custom Segmented Filter Tabs]
-    C --> F[Dynamic Project ListView / Unified Empty Card]
+A[Scaffold] --> B[Minimal App Bar]
+A --> C[Dashboard Container]
+C --> D[Analytics Card]
+C --> E[Statistics Card]
+C --> F[Schedule Section]
 ```
-
-### A. Dashboard Halaman Utama (ProjectListView)
-
-1.  **Sleek Wallet-Styled Hero Card:**
-    *   Displays **Total Pendapatan Lunas** (Paid invoices) as the hero metric in extra-large typography.
-    *   Features a secondary verified badge highlighting active data.
-    *   Splits the bottom section into two distinct segments: **Tagihan Tertunda** (with amber dot indicator) and **Proyek Aktif** (with blue dot indicator).
-    *   Styled with a dark navy-to-charcoal gradient (`Color(0xFF1E2640)` -> `Color(0xFF0F1524)`) and a subtle glowing shadow.
-2.  **Segmented Filter Tab Bar:**
-    *   Horizontal button strip allowing instant toggle between "Semua", "Dikerjakan", and "Selesai".
-    *   Uses an inner container background of Color `0xFF0F1524` with sharp borders for high contrast.
-3.  **Project Item Card:**
-    *   Glass-like frame with white borders at low opacity (`Color(0x0CFFFFFF)`).
-    *   **Time-Remaining Progress Bar:** Displays time elapsed from creation date to due date.
-        *   *Consistent Height:* When a project is marked **Completed**, the progress indicator remains visible at `100%` in emerald green to prevent card height collapse.
-        *   *Dynamic Coloring:* Turns red if **Overdue**, amber if less than 3 days remain, and blue for regular timelines.
-4.  **Unified Empty State Container:**
-    *   Consistent visual card formatting with a centered circular folder/filter icon, bold header text, and descriptive subtitle guiding the next action.
-
-### B. Formulir Tambah Proyek (ProjectAddView)
-
-1.  **Form Input Field Styling:**
-    *   Text fields use a contrasting input background (`Color(0xFF0F1524)`) with high-contrast active focused borders (`primaryColor`, width `1.5`).
-2.  **Interactive Segmented Choice Pill Selector:**
-    *   Replaces standard dropdown components.
-    *   Allows immediate interactive selection with animated container fills indicating selection, custom colored active borders, and clear state indicators.
 
 ---
 
-## 📱 3. Responsive & Device Adaptability
+# 📱 Dashboard Screen
 
-Following the `flutter-build-responsive-layout` principles:
-*   The layouts are wrapped in `ConstrainedBox(constraints: BoxConstraints(maxWidth: 850))` and centered.
-*   This ensures the dashboard looks cohesive on mobile, but maintains a centralized, clean dashboard shape on iPad/Tablets, Web browsers, and Desktop platforms, avoiding stretched text lines and over-extended metrics.
+The reference uses a **vertical information architecture**.
+
+---
+
+## Header
+
+```text
+Dashboard
+```
+
+Simple.
+
+No greeting.
+
+No large hero section.
+
+---
+
+## Analytics Card
+
+Contains:
+
+* metric
+* small trend badge
+* chart.
+
+Card layout:
+
+```text
+Metric
+Trend
+
+Chart
+```
+
+---
+
+## Statistics Card
+
+Contains:
+
+* category values
+* mini chart
+* dropdown selector.
+
+---
+
+## Schedule Card
+
+Contains:
+
+* segmented tabs
+* pending items
+* schedule timeline.
+
+---
+
+# Component Philosophy
+
+Each card has:
+
+```text
+One purpose only.
+```
+
+Never mix:
+
+* finances
+* projects
+* analytics
+* tasks
+
+inside one container.
+
+---
+
+# ProjectKu Adaptation
+
+Instead of:
+
+```text
+Revenue
+Projects
+Invoices
+Status
+```
+
+inside one hero card,
+
+split them into:
+
+```text
+Revenue Card
+Project Card
+Invoice Card
+Task Card
+```
+
+This matches the reference.
+
+---
+
+# Cards
+
+## Background
+
+```dart
+Color(0xFFF7F9FC)
+```
+
+---
+
+## Radius
+
+```text
+24
+```
+
+---
+
+## Border
+
+```dart
+Color(0xFFE8EDF3)
+```
+
+---
+
+## Padding
+
+```text
+24
+```
+
+---
+
+# Buttons
+
+The reference uses very soft buttons.
+
+---
+
+## Primary
+
+```dart
+Background:
+#5C7CFA
+
+Text:
+White
+```
+
+---
+
+## Secondary
+
+```dart
+Background:
+White
+
+Border:
+#E8EDF3
+```
+
+---
+
+# Segmented Control
+
+```dart
+Background:
+#F1F5F9
+```
+
+Active:
+
+```dart
+Background:
+White
+```
+
+---
+
+# Charts
+
+The charts use:
+
+* rounded bars
+* monochromatic colors
+* soft gradients.
+
+No neon.
+
+No saturated colors.
+
+---
+
+# Icons
+
+Icons are:
+
+```text
+20px
+24px
+```
+
+Outline style.
+
+Never filled.
+
+---
+
+# 📱 Responsive System
+
+The reference follows a card-first layout.
+
+```dart
+ConstrainedBox(
+  constraints:
+      BoxConstraints(maxWidth: 480),
+)
+```
+
+Unlike dashboards, it intentionally keeps content narrow.
+
+---
+
+# 🎯 Final Design Direction
+
+## Keywords
+
+```text
+Calm
+Editorial
+Soft
+Minimal
+Human
+Professional
+Timeless
+```
+
+---
+
+# Product Vision
+
+ProjectKu should feel like:
+
+> A beautifully crafted productivity tool that disappears into the background and lets freelancers focus on their work.
+
+Not:
+
+> A flashy dashboard trying to impress users with effects.
