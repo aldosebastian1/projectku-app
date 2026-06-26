@@ -135,7 +135,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           }
           return Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 850),
+              constraints: const BoxConstraints(maxWidth: 480),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
@@ -194,7 +194,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0x0CFFFFFF)),
+            border: Border.all(color: AppTheme.borderHighlightColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +233,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 style: const TextStyle(
                   fontSize: 10,
                   letterSpacing: 1.2,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w600,
                   color: AppTheme.textColorSecondary,
                 ),
               ),
@@ -242,7 +242,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 formatRupiah(project.budget),
                 style: const TextStyle(
                   fontSize: 28,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   color: AppTheme.primaryColor,
                   letterSpacing: -0.5,
                 ),
@@ -259,7 +259,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0x0CFFFFFF)),
+            border: Border.all(color: AppTheme.borderHighlightColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +278,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                   statusColor,
                 ),
               ),
-              const Divider(color: Color(0x0CFFFFFF), height: 24),
+              const Divider(color: AppTheme.borderHighlightColor, height: 24),
               _buildDetailRow(
                 l10n.statusPembayaran,
                 _buildBadge(
@@ -288,7 +288,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                   paymentColor,
                 ),
               ),
-              const Divider(color: Color(0x0CFFFFFF), height: 24),
+              const Divider(color: AppTheme.borderHighlightColor, height: 24),
               _buildDetailRow(
                 l10n.tenggatWaktu,
                 Row(
@@ -321,7 +321,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                           style: const TextStyle(
                             color: AppTheme.errorColor,
                             fontSize: 9,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -329,7 +329,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                   ],
                 ),
               ),
-              const Divider(color: Color(0x0CFFFFFF), height: 24),
+              const Divider(color: AppTheme.borderHighlightColor, height: 24),
               _buildDetailRow(
                 l10n.sisaWaktu,
                 Text(
@@ -357,7 +357,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           decoration: BoxDecoration(
             color: AppTheme.cardColor,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0x0CFFFFFF)),
+            border: Border.all(color: AppTheme.borderHighlightColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,9 +451,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.cardColor,
+              color: AppTheme.surfaceBackground,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0x0CFFFFFF)),
+              border: Border.all(color: AppTheme.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,7 +504,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 TextFormField(
                   controller: _budgetController,
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.primaryColor),
                   decoration: InputDecoration(
                     hintText: l10n.projectBudgetHint,
                     prefixIcon: const Icon(Icons.wallet_rounded, size: 20),
@@ -529,9 +529,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0F1524),
+                      color: AppTheme.cardColor,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0x0CFFFFFF)),
+                      border: Border.all(color: AppTheme.borderHighlightColor),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -564,9 +564,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.cardColor,
+              color: AppTheme.surfaceBackground,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0x0CFFFFFF)),
+              border: Border.all(color: AppTheme.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -628,9 +628,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.cardColor,
+              color: AppTheme.surfaceBackground,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0x0CFFFFFF)),
+              border: Border.all(color: AppTheme.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,7 +726,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
         style: TextStyle(
           color: color,
           fontSize: 10.5,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -768,9 +768,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F1524),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0x0CFFFFFF)),
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.borderHighlightColor),
       ),
       child: Row(
         children: options.map((option) {
@@ -784,12 +784,20 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 curve: Curves.easeInOut,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? activeColor.withValues(alpha: 0.12) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
+                  color: isSelected ? Colors.white : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isSelected ? activeColor.withValues(alpha: 0.3) : Colors.transparent,
-                    width: 1,
+                    color: isSelected ? AppTheme.borderHighlightColor : Colors.transparent,
                   ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          )
+                        ]
+                      : null,
                 ),
                 alignment: Alignment.center,
                 child: Text(
@@ -797,7 +805,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                   style: TextStyle(
                     color: isSelected ? activeColor : AppTheme.textColorSecondary,
                     fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),
               ),
@@ -846,7 +854,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 const SizedBox(height: 24),
                 Text(
                   l10n.statusPengerjaan,
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.textColorSecondary),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: AppTheme.textColorSecondary),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -888,7 +896,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 const SizedBox(height: 20),
                 Text(
                   l10n.statusPembayaran,
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.textColorSecondary),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: AppTheme.textColorSecondary),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -951,10 +959,10 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
           decoration: BoxDecoration(
             color: isSelected
                 ? activeColor.withValues(alpha: 0.1)
-                : const Color(0xFF0F1524),
+                : AppTheme.cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isSelected ? activeColor.withValues(alpha: 0.4) : const Color(0x0CFFFFFF),
+              color: isSelected ? activeColor.withValues(alpha: 0.4) : AppTheme.borderHighlightColor,
               width: 1.5,
             ),
           ),
@@ -963,7 +971,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
             text,
             style: TextStyle(
               fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w600,
               color: isSelected ? activeColor : AppTheme.textColorPrimary,
             ),
           ),
@@ -985,7 +993,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x0CFFFFFF)),
+        border: Border.all(color: AppTheme.borderHighlightColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1074,7 +1082,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: project.tasks.length,
-              separatorBuilder: (context, index) => const Divider(color: Color(0x0CFFFFFF), height: 16),
+              separatorBuilder: (context, index) => const Divider(color: AppTheme.borderHighlightColor, height: 16),
               itemBuilder: (context, index) {
                 final task = project.tasks[index];
                 return Row(
