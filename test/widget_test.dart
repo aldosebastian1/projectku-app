@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tugas/main.dart';
@@ -36,7 +37,7 @@ void main() {
         overrides: [
           projectsStreamProvider.overrideWith((ref) => Stream.value(mockProjects)),
         ],
-        child: const MyApp(),
+        child: const MyApp(locale: Locale('id')),
       ),
     );
 
