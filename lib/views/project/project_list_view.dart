@@ -533,6 +533,10 @@ class ProjectListView extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
+          // Financial Analytics Card
+          _buildFinancialAnalyticsCard(context, allProjects),
+          const SizedBox(height: 24),
+
           // Custom Premium Segmented Filter Tab Bar
           _buildFilterBar(ref, currentFilter),
           const SizedBox(height: 20),
@@ -1026,5 +1030,366 @@ class ProjectListView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildFinancialAnalyticsCard(BuildContext context, List<Project> projects) {
+    final l10n = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+
+    // 1. Calculate values for Pie Chart (Paid vs Pending)
+    double totalPaid = 0.0;
+    double totalPending = 0.0;
+    for (var p in projects) {
+      if (p.paymentStatus == 'Paid') {
+        totalPaid += p.budget;
+      } else {
+        totalPending += p.budget;
+      }
+    }
+    double totalIncome = totalPaid + totalPending;
+    double paidPercentage = totalIncome > 0 ? (totalPaid / totalIncome) * 100 : 0.0;
+    double pendingPercentage = totalIncome > 0 ? (totalPending / totalIncome) * 100 : 0.0;
+
+    // 2. Calculate values for Monthly Bar Chart (Last 6 Months)
+    List<double> monthlyIncomes = List.filled(6, 0.0);
+    List<String> monthLabels = List.filled(6, '');
+    final localeStr = Localizations.localeOf(context).toString();
+
+    for (int i = 0; i < 6; i++) {
+      final targetMonth = DateTime(now.year, now.month - (5 - i), 1);
+      monthLabels[i] = DateFormat('MMM', localeStr).format(targetMonth);
+
+      for (var p in projects) {
+        if (p.paymentStatus == 'Paid') {
+          final date = p.dueDate;
+          if (date.year == targetMonth.year && date.month == targetMonth.month) {
+            monthlyIncomes[i] += p.budget;
+          }
+        }
+      }
+    }
+
+    double maxIncome = monthlyIncomes.fold(0.0, (max, val) => val > max ? val : max);
+    if (maxIncome == 0.0) maxIncome = 1.0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0x0CFFFFFF)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.analytics_rounded, color: AppTheme.primaryColor, size: 22),
+              const SizedBox(width: 10),
+              Text(
+                l10n.analitikKeuangan,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 550;
+              final content = [
+                // Column 1: Pie/Donut Chart
+                Expanded(
+                  flex: isWide ? 4 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.perbandinganPendapatan,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textColorSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 1200),
+                            curve: Curves.easeOutBack,
+                            builder: (context, value, child) {
+                              return SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    CustomPaint(
+                                      size: const Size(100, 100),
+                                      painter: DonutChartPainter(
+                                        paidPercentage: paidPercentage,
+                                        pendingPercentage: pendingPercentage,
+                                        animationProgress: value,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${(paidPercentage * value).toInt()}%',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                        color: AppTheme.secondaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLegendItem(
+                                  l10n.paymentPaid,
+                                  formatRupiah(totalPaid),
+                                  AppTheme.secondaryColor,
+                                  '${paidPercentage.toStringAsFixed(1)}%',
+                                ),
+                                const SizedBox(height: 12),
+                                _buildLegendItem(
+                                  l10n.paymentUnpaid,
+                                  formatRupiah(totalPending),
+                                  AppTheme.accentColor,
+                                  '${pendingPercentage.toStringAsFixed(1)}%',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                if (!isWide) const SizedBox(height: 32),
+                if (isWide) const SizedBox(width: 32),
+                // Column 2: Bar Chart
+                Expanded(
+                  flex: isWide ? 6 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.pendapatan6Bulan,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textColorSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        height: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: List.generate(6, (index) {
+                            final income = monthlyIncomes[index];
+                            final label = monthLabels[index];
+                            final heightFactor = income / maxIncome;
+
+                            return Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    child: LayoutBuilder(
+                                      builder: (context, barConstraints) {
+                                        return Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: TweenAnimationBuilder<double>(
+                                            tween: Tween<double>(begin: 0.0, end: heightFactor),
+                                            duration: const Duration(milliseconds: 1000),
+                                            curve: Curves.easeOutCubic,
+                                            builder: (context, value, child) {
+                                              return Container(
+                                                height: (barConstraints.maxHeight * value).clamp(4.0, barConstraints.maxHeight),
+                                                width: 14,
+                                                decoration: BoxDecoration(
+                                                  gradient: const LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [
+                                                      AppTheme.secondaryColor,
+                                                      Color(0xFF0F2D1F),
+                                                    ],
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    label,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppTheme.textColorSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ];
+
+              return isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: content,
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: content.map((w) {
+                        if (w is Expanded) {
+                          return w.child;
+                        }
+                        return w;
+                      }).toList(),
+                    );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegendItem(String label, String amount, Color color, String percentage) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.textColorPrimary,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              percentage,
+              style: TextStyle(
+                fontSize: 10.5,
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Padding(
+          padding: const EdgeInsets.only(left: 18.0),
+          child: Text(
+            amount,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: AppTheme.textColorSecondary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DonutChartPainter extends CustomPainter {
+  final double paidPercentage;
+  final double pendingPercentage;
+  final double animationProgress;
+
+  DonutChartPainter({
+    required this.paidPercentage,
+    required this.pendingPercentage,
+    required this.animationProgress,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+    final strokeWidth = 14.0;
+    final double innerRadius = radius - strokeWidth;
+
+    final paintPaid = Paint()
+      ..color = AppTheme.secondaryColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final paintPending = Paint()
+      ..color = AppTheme.accentColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final paintBackground = Paint()
+      ..color = const Color(0xFF0F1524)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final rect = Rect.fromCircle(center: center, radius: innerRadius);
+
+    canvas.drawArc(rect, 0, 2 * 3.14159265, false, paintBackground);
+
+    if (paidPercentage == 0 && pendingPercentage == 0) {
+      return;
+    }
+
+    final double totalPercentage = paidPercentage + pendingPercentage;
+    final double paidAngle = (paidPercentage / totalPercentage) * 2 * 3.14159265 * animationProgress;
+    final double pendingAngle = (pendingPercentage / totalPercentage) * 2 * 3.14159265 * animationProgress;
+
+    double startAngle = -3.14159265 / 2;
+
+    if (paidAngle > 0) {
+      canvas.drawArc(rect, startAngle, paidAngle, false, paintPaid);
+      startAngle += paidAngle;
+    }
+
+    if (pendingAngle > 0) {
+      canvas.drawArc(rect, startAngle, pendingAngle, false, paintPending);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant DonutChartPainter oldDelegate) {
+    return oldDelegate.paidPercentage != paidPercentage ||
+        oldDelegate.pendingPercentage != pendingPercentage ||
+        oldDelegate.animationProgress != animationProgress;
   }
 }
