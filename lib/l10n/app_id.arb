@@ -72,5 +72,13 @@
   "deleteProjectBtn": "Hapus Proyek",
   "editProjectInfo": "Edit Informasi Proyek",
   "saveChanges": "Simpan Perubahan",
-  "saveChangesSuccess": "Perubahan proyek sukses disimpan"
+  "saveChangesSuccess": "Perubahan proyek sukses disimpan",
+  "errorLoadDetail": "Gagal memuat detail proyek",
+  "tenggatWaktu": "Tenggat Waktu",
+  "sisaWaktu": "Sisa Waktu",
+  "deskripsiProyek": "Deskripsi / Catatan Proyek",
+  "noNotes": "Tidak ada catatan tambahan.",
+  "quickUpdateSheetTitle": "Ubah Status Proyek",
+  "quickUpdateSheetSubtitle": "Ubah pengerjaan atau status pembayaran dengan cepat.",
+  "timeRemainingOverdue": "Batas waktu berakhir"
 }
