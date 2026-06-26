@@ -284,4 +284,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tugasKosong => 'No tasks yet. Add your first task above!';
+
+  @override
+  String get analitikKeuangan => 'Financial Analytics';
+
+  @override
+  String get perbandinganPendapatan => 'Income Status';
+
+  @override
+  String get pendapatan6Bulan => 'Paid Income: Last 6 Months';
 }
