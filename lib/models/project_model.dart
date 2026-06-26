@@ -1,5 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class ProjectTask {
+  final String title;
+  final bool isCompleted;
+
+  ProjectTask({
+    required this.title,
+    this.isCompleted = false,
+  });
+
+  ProjectTask copyWith({
+    String? title,
+    bool? isCompleted,
+  }) {
+    return ProjectTask(
+      title: title ?? this.title,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'isCompleted': isCompleted,
+    };
+  }
+
+  factory ProjectTask.fromMap(Map<String, dynamic> map) {
+    return ProjectTask(
+      title: map['title'] ?? '',
+      isCompleted: map['isCompleted'] ?? false,
+    );
+  }
+}
+
 class Project {
   final String id;
   final String name;
@@ -10,6 +44,7 @@ class Project {
   final String paymentStatus; // 'Unpaid', 'Paid', 'Invoice Sent'
   final String description;
   final DateTime createdAt;
+  final List<ProjectTask> tasks;
 
   Project({
     required this.id,
@@ -21,6 +56,7 @@ class Project {
     required this.paymentStatus,
     required this.description,
     required this.createdAt,
+    this.tasks = const [],
   });
 
   Project copyWith({
@@ -33,6 +69,7 @@ class Project {
     String? paymentStatus,
     String? description,
     DateTime? createdAt,
+    List<ProjectTask>? tasks,
   }) {
     return Project(
       id: id ?? this.id,
@@ -44,6 +81,7 @@ class Project {
       paymentStatus: paymentStatus ?? this.paymentStatus,
       description: description ?? this.description,
       createdAt: createdAt ?? this.createdAt,
+      tasks: tasks ?? this.tasks,
     );
   }
 
@@ -57,6 +95,7 @@ class Project {
       'paymentStatus': paymentStatus,
       'description': description,
       'createdAt': Timestamp.fromDate(createdAt),
+      'tasks': tasks.map((t) => t.toMap()).toList(),
     };
   }
 
@@ -71,6 +110,10 @@ class Project {
       paymentStatus: map['paymentStatus'] ?? 'Unpaid',
       description: map['description'] ?? '',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      tasks: (map['tasks'] as List<dynamic>?)
+              ?.map((t) => ProjectTask.fromMap(Map<String, dynamic>.from(t as Map)))
+              .toList() ??
+          const [],
     );
   }
 
