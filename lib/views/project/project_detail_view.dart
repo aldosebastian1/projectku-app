@@ -945,14 +945,14 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected
                 ? activeColor.withValues(alpha: 0.1)
                 : const Color(0xFF0F1524),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected ? activeColor.withValues(alpha: 0.4) : const Color(0x0CFFFFFF),
               width: 1.5,
