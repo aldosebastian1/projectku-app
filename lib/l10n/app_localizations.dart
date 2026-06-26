@@ -589,6 +589,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deadline has passed'**
   String get timeRemainingOverdue;
+
+  /// Task checklist card header
+  ///
+  /// In en, this message translates to:
+  /// **'Task Checklist / Milestones'**
+  String get tugasChecklist;
+
+  /// Add task button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Task'**
+  String get tambahTugas;
+
+  /// Add task textfield hint
+  ///
+  /// In en, this message translates to:
+  /// **'Write task title...'**
+  String get tugasHint;
+
+  /// Empty tasks list message
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks yet. Add your first task above!'**
+  String get tugasKosong;
 }
 
 class _AppLocalizationsDelegate
