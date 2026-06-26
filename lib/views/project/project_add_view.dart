@@ -73,7 +73,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor))
           : Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 850),
+                constraints: const BoxConstraints(maxWidth: 480),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -112,7 +112,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                           decoration: BoxDecoration(
                             color: AppTheme.cardColor,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                            border: Border.all(color: AppTheme.borderHighlightColor),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +163,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                               TextFormField(
                                 controller: _budgetController,
                                 keyboardType: TextInputType.number,
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.primaryColor),
                                 decoration: InputDecoration(
                                   hintText: l10n.projectBudgetHint,
                                   prefixIcon: const Icon(Icons.wallet_rounded, color: AppTheme.textColorSecondary, size: 20),
@@ -188,9 +188,9 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF0F1524),
+                                    color: AppTheme.cardColor,
                                     borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(color: const Color(0x0CFFFFFF)),
+                                    border: Border.all(color: AppTheme.borderHighlightColor),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,7 +225,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                           decoration: BoxDecoration(
                             color: AppTheme.cardColor,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                            border: Border.all(color: AppTheme.borderHighlightColor),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,7 +289,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                           decoration: BoxDecoration(
                             color: AppTheme.cardColor,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                            border: Border.all(color: AppTheme.borderHighlightColor),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,9 +359,9 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F1524),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0x0CFFFFFF)),
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.borderHighlightColor),
       ),
       child: Row(
         children: options.map((option) {
@@ -375,12 +375,20 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                 curve: Curves.easeInOut,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? activeColor.withValues(alpha: 0.12) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
+                  color: isSelected ? Colors.white : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isSelected ? activeColor.withValues(alpha: 0.3) : Colors.transparent,
-                    width: 1,
+                    color: isSelected ? AppTheme.borderHighlightColor : Colors.transparent,
                   ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          )
+                        ]
+                      : null,
                 ),
                 alignment: Alignment.center,
                 child: Text(
@@ -388,7 +396,7 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
                   style: TextStyle(
                     color: isSelected ? activeColor : AppTheme.textColorSecondary,
                     fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),
               ),
