@@ -378,5 +378,17 @@
   "tugasKosong": "No tasks yet. Add your first task above!",
   "@tugasKosong": {
     "description": "Empty tasks list message"
+  },
+  "analitikKeuangan": "Financial Analytics",
+  "@analitikKeuangan": {
+    "description": "Financial analytics section header"
+  },
+  "perbandinganPendapatan": "Income Status",
+  "@perbandinganPendapatan": {
+    "description": "Income comparison title"
+  },
+  "pendapatan6Bulan": "Paid Income: Last 6 Months",
+  "@pendapatan6Bulan": {
+    "description": "Bar chart title for monthly incomes"
   }
 }
