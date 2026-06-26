@@ -24,6 +24,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
   late TextEditingController _clientController;
   late TextEditingController _budgetController;
   late TextEditingController _descController;
+  late TextEditingController _taskController;
   DateTime? _selectedDueDate;
   String? _selectedStatus;
   String? _selectedPaymentStatus;
@@ -35,6 +36,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     _clientController = TextEditingController();
     _budgetController = TextEditingController();
     _descController = TextEditingController();
+    _taskController = TextEditingController();
   }
 
   @override
@@ -43,6 +45,7 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     _clientController.dispose();
     _budgetController.dispose();
     _descController.dispose();
+    _taskController.dispose();
     super.dispose();
   }
 
@@ -376,6 +379,8 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
             ],
           ),
         ),
+        const SizedBox(height: 20),
+        _buildTasksCard(context, project, listController),
         const SizedBox(height: 36),
 
         // Actions
@@ -963,6 +968,165 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTasksCard(
+    BuildContext context,
+    Project project,
+    ProjectListController listController,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0x0CFFFFFF)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.tugasChecklist,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              if (project.tasks.isNotEmpty)
+                Text(
+                  '${project.tasks.where((t) => t.isCompleted).length}/${project.tasks.length}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Add Task Input Row
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _taskController,
+                  style: const TextStyle(fontSize: 14),
+                  decoration: InputDecoration(
+                    hintText: l10n.tugasHint,
+                    hintStyle: const TextStyle(color: AppTheme.textColorSecondary, fontSize: 13),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                  onSubmitted: (val) async {
+                    if (val.trim().isNotEmpty) {
+                      final newTask = ProjectTask(title: val.trim());
+                      final updatedTasks = List<ProjectTask>.from(project.tasks)..add(newTask);
+                      await listController.updateProject(project.copyWith(tasks: updatedTasks));
+                      _taskController.clear();
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_taskController.text.trim().isNotEmpty) {
+                    final newTask = ProjectTask(title: _taskController.text.trim());
+                    final updatedTasks = List<ProjectTask>.from(project.tasks)..add(newTask);
+                    await listController.updateProject(project.copyWith(tasks: updatedTasks));
+                    _taskController.clear();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  minimumSize: Size.zero,
+                ),
+                child: Text(l10n.tambahTugas),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Tasks List
+          if (project.tasks.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: Text(
+                  l10n.tugasKosong,
+                  style: const TextStyle(
+                    color: AppTheme.textColorSecondary,
+                    fontSize: 13,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: project.tasks.length,
+              separatorBuilder: (context, index) => const Divider(color: Color(0x0CFFFFFF), height: 16),
+              itemBuilder: (context, index) {
+                final task = project.tasks[index];
+                return Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final updatedTasks = List<ProjectTask>.from(project.tasks);
+                        updatedTasks[index] = task.copyWith(isCompleted: !task.isCompleted);
+                        await listController.updateProject(project.copyWith(tasks: updatedTasks));
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: task.isCompleted ? AppTheme.primaryColor.withValues(alpha: 0.1) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: task.isCompleted ? AppTheme.primaryColor : AppTheme.textColorSecondary.withValues(alpha: 0.5),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: task.isCompleted
+                            ? const Icon(Icons.check, size: 14, color: AppTheme.primaryColor)
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        task.title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: task.isCompleted ? AppTheme.textColorSecondary : AppTheme.textColorPrimary,
+                          decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline_rounded, color: AppTheme.errorColor, size: 20),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () async {
+                        final updatedTasks = List<ProjectTask>.from(project.tasks)..removeAt(index);
+                        await listController.updateProject(project.copyWith(tasks: updatedTasks));
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+        ],
       ),
     );
   }
