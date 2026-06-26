@@ -1,6 +1,6 @@
-# tugas
+# ProjectKu
 
-A new Flutter project.
+ProjectKu adalah aplikasi manajemen proyek mandiri (freelance) berbasis real-time yang dirancang untuk mengatasi kompleksitas administratif dalam menangani banyak klien. Seringkali, pekerja lepas menghadapi tantangan operasional—seperti terlewatnya tenggat waktu krusial atau tagihan (invoice) yang tidak terkelola—akibat proses pencatatan manual yang tersebar. Aplikasi ini hadir sebagai solusi sentralisasi data, memungkinkan pengguna untuk memantau siklus hidup proyek, alokasi anggaran, dan status pembayaran dalam satu dasbor interaktif. Dibangun dengan arsitektur modern menggunakan Flutter, implementasi state management Riverpod, serta dukungan backend Firebase Cloud Firestore, ProjectKu menjamin sinkronisasi data yang cepat, aman, dan skalabel untuk penggunaan profesional.
 
 ## Getting Started
 
