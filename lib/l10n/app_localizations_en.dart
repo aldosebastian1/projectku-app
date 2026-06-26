@@ -272,4 +272,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeRemainingOverdue => 'Deadline has passed';
+
+  @override
+  String get tugasChecklist => 'Task Checklist / Milestones';
+
+  @override
+  String get tambahTugas => 'Add Task';
+
+  @override
+  String get tugasHint => 'Write task title...';
+
+  @override
+  String get tugasKosong => 'No tasks yet. Add your first task above!';
 }
