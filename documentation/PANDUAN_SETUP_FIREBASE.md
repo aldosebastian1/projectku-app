@@ -1,6 +1,6 @@
-# Panduan Lengkap Setup & Integrasi Firebase Cloud Firestore — ProjectKu
+# Panduan Lengkap Setup Firebase Authentication & Cloud Firestore — ProjectKu
 
-Dokumen ini berisi panduan terstruktur dan detail langkah demi langkah untuk menghubungkan aplikasi **ProjectKu (Freelancer Tracker)** dengan layanan **Firebase Cloud Firestore** agar aplikasi dapat melakukan sinkronisasi data secara real-time.
+Dokumen ini berisi panduan terstruktur dan detail langkah demi langkah untuk menghubungkan aplikasi **ProjectKu (Freelancer Tracker)** dengan layanan **Firebase Authentication** dan **Firebase Cloud Firestore** agar aplikasi dapat melakukan login Email/Password dan melakukan sinkronisasi data secara real-time per akun.
 
 ---
 
@@ -17,11 +17,12 @@ Sebelum memulai, pastikan perangkat pengembangan Anda sudah memiliki:
 
 ```mermaid
 graph TD
-    A[1. Buat Proyek Firebase] --> B[2. Aktifkan Cloud Firestore]
-    B --> C[3. Instal & Login Firebase CLI]
-    C --> D[4. Jalankan FlutterFire Configure]
-    D --> E[5. Atur Security Rules Firestore]
-    E --> F[6. Jalankan & Uji Integrasi]
+    A[1. Buat Proyek Firebase] --> B[2. Aktifkan Authentication Email/Password]
+    B --> C[3. Aktifkan Cloud Firestore]
+    C --> D[4. Instal & Login Firebase CLI]
+    D --> E[5. Jalankan FlutterFire Configure]
+    E --> F[6. Atur Security Rules Firestore]
+    F --> G[7. Jalankan & Uji Integrasi]
 ```
 
 ---
@@ -37,7 +38,14 @@ graph TD
 
 ---
 
-### Langkah 2: Mengaktifkan Cloud Firestore Database
+### Langkah 2: Mengaktifkan Authentication Email/Password
+1.  Di Firebase Console, buka menu **Build** > **Authentication**.
+2.  Masuk ke tab **Sign-in method**.
+3.  Aktifkan provider **Email/Password**.
+4.  Simpan perubahan.
+5.  Tambahkan akun owner pertama di tab **Users** dengan email dan password yang akan dipakai untuk login aplikasi.
+
+### Langkah 3: Mengaktifkan Cloud Firestore Database
 1.  Di menu navigasi sebelah kiri Firebase Console, klik menu **Build** > **Firestore Database**.
 2.  Klik tombol **Create Database** (Buat Database).
 3.  **Tentukan Aturan Keamanan Awal:**
@@ -50,7 +58,7 @@ graph TD
 
 ---
 
-### Langkah 3: Menginstal dan Menghubungkan Firebase CLI
+### Langkah 4: Menginstal dan Menghubungkan Firebase CLI
 1.  Buka Terminal (PowerShell di Windows, Terminal di macOS/Linux).
 2.  Instal **Firebase CLI** secara global menggunakan npm:
     ```bash
@@ -65,7 +73,7 @@ graph TD
 
 ---
 
-### Langkah 4: Menjalankan Konfigurasi FlutterFire CLI
+### Langkah 5: Menjalankan Konfigurasi FlutterFire CLI
 FlutterFire CLI akan menghubungkan codebase Flutter Anda dengan proyek Firebase yang telah dibuat dan memperbarui berkas kredensial riil secara otomatis.
 
 1.  Di terminal Anda, aktifkan FlutterFire CLI secara global menggunakan Dart SDK:
@@ -95,8 +103,8 @@ FlutterFire CLI akan menghubungkan codebase Flutter Anda dengan proyek Firebase 
 
 ---
 
-### Langkah 5: Mengatur Aturan Keamanan Firestore (Security Rules)
-Agar aplikasi dapat membaca dan menulis data secara permanen selama tahap pengembangan tanpa batasan 30 hari, Anda dapat mengedit aturan keamanan Firestore:
+### Langkah 6: Mengatur Aturan Keamanan Firestore (Security Rules)
+Agar data hanya dapat diakses oleh pemilik akun yang sedang login, gunakan aturan berikut:
 
 1.  Kembali ke **Firebase Console** > **Firestore Database**.
 2.  Buka tab **Rules** (Aturan) di bagian atas halaman.
@@ -107,7 +115,9 @@ Agar aplikasi dapat membaca dan menulis data secara permanen selama tahap pengem
     service cloud.firestore {
       match /databases/{database}/documents {
         match /projects/{document} {
-          allow read, write: if true;
+          allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+          allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+          allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
         }
       }
     }
@@ -116,7 +126,7 @@ Agar aplikasi dapat membaca dan menulis data secara permanen selama tahap pengem
 
 ---
 
-### Langkah 6: Pengujian Konektivitas & Menjalankan Aplikasi
+### Langkah 7: Pengujian Konektivitas & Menjalankan Aplikasi
 1.  Jalankan pengujian unit widget di terminal untuk memastikan tidak ada kesalahan konfigurasi:
     ```bash
     flutter test
@@ -126,13 +136,17 @@ Agar aplikasi dapat membaca dan menulis data secara permanen selama tahap pengem
     ```bash
     flutter run
     ```
-4.  **Tes Tambah Proyek:**
-    *   Masuk ke aplikasi, klik tombol floating action button **"+"**.
+4.  **Tes Login:**
+    *   Saat aplikasi dibuka, pastikan Anda diarahkan ke halaman login.
+    *   Masukkan email dan password akun owner yang sudah dibuat.
+    *   Setelah berhasil, aplikasi harus masuk ke dashboard.
+5.  **Tes Tambah Proyek:**
+    *   Klik tombol floating action button **"+"**.
     *   Isi semua formulir (Nama Proyek, Klien, Budget, Due Date, dan Deskripsi).
     *   Klik **Simpan ke Database**.
-5.  **Periksa Hasil di Firebase Console:**
+6.  **Periksa Hasil di Firebase Console:**
     *   Buka kembali **Firebase Console** > **Firestore Database** > Tab **Data**.
-    *   Koleksi baru bernama `projects` sekarang telah muncul dan berisi dokumen proyek yang baru saja Anda tambahkan dari aplikasi secara real-time.
+    *   Koleksi `projects` akan berisi dokumen dengan field `userId` sesuai akun login.
 
 ---
 
@@ -156,5 +170,5 @@ Agar aplikasi dapat membaca dan menulis data secara permanen selama tahap pengem
     ```
 
 #### 3. Masalah: Error `[firestore/permission-denied]` ketika mencoba menambah data
-*   **Penyebab:** Aturan keamanan Firestore memblokir permintaan baca/tulis aplikasi Anda.
-*   **Solusi:** Buka tab **Rules** di Firebase Console Anda dan pastikan izinnya diatur ke `allow read, write: if true;` untuk koleksi `projects` (lihat Langkah 5).
+*   **Penyebab:** Aturan keamanan Firestore memblokir permintaan baca/tulis aplikasi Anda, atau dokumen belum memiliki `userId` yang sesuai.
+*   **Solusi:** Pastikan user sudah login lewat Authentication Email/Password, lalu verifikasi bahwa `userId` pada dokumen `projects` sama dengan `request.auth.uid` (lihat Langkah 6).
