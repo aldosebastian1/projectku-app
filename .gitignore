@@ -53,7 +53,8 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 firebase.json
-# lib/firebase_options.dart # (Hapus tanda pagar di depan jika Anda ingin menyembunyikan file ini dari GitHub)
+# lib/firebase_options.dart → Diaktifkan: file ini mengandung API key sensitif dan TIDAK boleh di-push
+lib/firebase_options.dart
 
 # Keystores & Security properties (Sangat penting agar kunci rilis Android tidak bocor)
 *.jks
