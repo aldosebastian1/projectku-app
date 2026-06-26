@@ -330,5 +330,37 @@
   "saveChangesSuccess": "Project changes successfully saved",
   "@saveChangesSuccess": {
     "description": "Success message after saving changes"
+  },
+  "errorLoadDetail": "Failed to load project details",
+  "@errorLoadDetail": {
+    "description": "Error message when failing to load project detail"
+  },
+  "tenggatWaktu": "Due Date",
+  "@tenggatWaktu": {
+    "description": "Due date row label"
+  },
+  "sisaWaktu": "Time Remaining",
+  "@sisaWaktu": {
+    "description": "Time remaining row label"
+  },
+  "deskripsiProyek": "Project Description / Notes",
+  "@deskripsiProyek": {
+    "description": "Project description card header"
+  },
+  "noNotes": "No additional notes.",
+  "@noNotes": {
+    "description": "Text when there are no project notes"
+  },
+  "quickUpdateSheetTitle": "Update Project Status",
+  "@quickUpdateSheetTitle": {
+    "description": "Quick status sheet title"
+  },
+  "quickUpdateSheetSubtitle": "Quickly update work or payment status.",
+  "@quickUpdateSheetSubtitle": {
+    "description": "Quick status sheet subtitle"
+  },
+  "timeRemainingOverdue": "Deadline has passed",
+  "@timeRemainingOverdue": {
+    "description": "Remaining time when deadline has passed"
   }
 }
