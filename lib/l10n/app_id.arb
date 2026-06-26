@@ -80,5 +80,9 @@
   "noNotes": "Tidak ada catatan tambahan.",
   "quickUpdateSheetTitle": "Ubah Status Proyek",
   "quickUpdateSheetSubtitle": "Ubah pengerjaan atau status pembayaran dengan cepat.",
-  "timeRemainingOverdue": "Batas waktu berakhir"
+  "timeRemainingOverdue": "Batas waktu berakhir",
+  "tugasChecklist": "Daftar Tugas / Milestone",
+  "tambahTugas": "Tambah Tugas",
+  "tugasHint": "Tulis nama tugas...",
+  "tugasKosong": "Belum ada tugas. Tambahkan tugas pertamamu di atas!"
 }
