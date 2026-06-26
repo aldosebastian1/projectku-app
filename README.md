@@ -17,10 +17,11 @@ Aplikasi ini berfokus pada penyelesaian masalah klasik *freelancer*, seperti pen
 
 Untuk mempermudah peninjauan teknis, dokumentasi proyek ini telah dibagi menjadi beberapa panduan terstruktur di dalam folder [`documentation/`](documentation/):
 
-1.  💼 **[PORTFOLIO_CASE_STUDY.md](documentation/PORTFOLIO_CASE_STUDY.md)**: Analisis mendalam tentang keputusan rekayasa perangkat lunak, penyelesaian masalah, diagram arsitektur MVC-Riverpod, skema database, pengujian, dan otomatisasi alur.
-2.  📂 **[PROJECT_DOCUMENTATION.md](documentation/PROJECT_DOCUMENTATION.md)**: Manual referensi komponen kode, penjelasan folder `lib`, dan cara kerja data flow.
-3.  🎨 **[ui_documentation.md](documentation/ui_documentation.md)**: Panduan visual sistem desain UI/UX, token warna, tipografi Inter, komponen, dan responsivitas layout.
-4.  ⚡ **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**: Panduan langkah demi langkah cara menghubungkan aplikasi ini ke konsol Firebase Anda sendiri menggunakan FlutterFire CLI.
+1.  📱 **[USAGE.md](documentation/USAGE.md)**: Panduan penggunaan lengkap — alur navigasi, penjelasan tiap layar, semua field, dan sistem status proyek.
+2.  💼 **[PORTFOLIO_CASE_STUDY.md](documentation/PORTFOLIO_CASE_STUDY.md)**: Analisis mendalam tentang keputusan rekayasa perangkat lunak, penyelesaian masalah, diagram arsitektur MVC-Riverpod, skema database, pengujian, dan otomatisasi alur.
+3.  📂 **[PROJECT_DOCUMENTATION.md](documentation/PROJECT_DOCUMENTATION.md)**: Manual referensi komponen kode, penjelasan folder `lib`, dan cara kerja data flow.
+4.  🎨 **[ui_documentation.md](documentation/ui_documentation.md)**: Panduan visual sistem desain UI/UX, token warna, tipografi Inter, komponen, dan responsivitas layout.
+5.  ⚡ **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**: Panduan langkah demi langkah cara menghubungkan aplikasi ini ke konsol Firebase Anda sendiri menggunakan FlutterFire CLI.
 
 ---
 
@@ -93,5 +94,5 @@ flutter test
 
 *   **Aldo Sebastian**
 *   LinkedIn: [aldosebastian](https://id.linkedin.com/in/aldosebastian)
-*   Portfolio Website: belum ada
-*   Email: emailaldosebastian@gmail.com(mailto:aldo.sebastian@example.com)
+*   Portfolio Website: *(belum ada)*
+*   Email: [emailaldosebastian@gmail.com](mailto:emailaldosebastian@gmail.com)
