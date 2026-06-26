@@ -15,13 +15,12 @@ Aplikasi ini berfokus pada penyelesaian masalah klasik *freelancer*, seperti pen
 
 ## 📂 Peta Dokumentasi Proyek (Documentation Roadmap)
 
-Untuk mempermudah peninjauan teknis, dokumentasi proyek ini telah dibagi menjadi beberapa panduan terstruktur:
+Untuk mempermudah peninjauan teknis, dokumentasi proyek ini telah dibagi menjadi beberapa panduan terstruktur di dalam folder [`documentation/`](documentation/):
 
-1.  💼 **[PORTFOLIO_CASE_STUDY.md](file:///D:/Portofolio/ProjectKu/PORTFOLIO_CASE_STUDY.md)**: Analisis mendalam tentang keputusan rekayasa perangkat lunak, penyelesaian masalah, diagram arsitektur MVC-Riverpod, skema database, pengujian, dan otomatisasi alur.
-2.  📂 **[PROJECT_DOCUMENTATION.md](file:///D:/Portofolio/ProjectKu/PROJECT_DOCUMENTATION.md)**: Manual referensi komponen kode, penjelasan folder `lib`, dan cara kerja data flow.
-3.  🎨 **[ui_documentation.md](file:///D:/Portofolio/ProjectKu/ui_documentation.md)**: Panduan visual sistem desain UI/UX, token warna, tipografi Outfit, sisa waktu progress bar, dan responsivitas layout.
-4.  ⚡ **[PANDUAN_SETUP_FIREBASE.md](file:///D:/Portofolio/ProjectKu/PANDUAN_SETUP_FIREBASE.md)**: Panduan langkah demi langkah cara menghubungkan aplikasi ini ke konsol Firebase Anda sendiri menggunakan FlutterFire CLI.
-5.  🗺️ **[flow.md](file:///D:/Portofolio/ProjectKu/flow.md)**: Peta alur navigasi aktual aplikasi yang dihasilkan secara otomatis menggunakan skrip Dart.
+1.  💼 **[PORTFOLIO_CASE_STUDY.md](documentation/PORTFOLIO_CASE_STUDY.md)**: Analisis mendalam tentang keputusan rekayasa perangkat lunak, penyelesaian masalah, diagram arsitektur MVC-Riverpod, skema database, pengujian, dan otomatisasi alur.
+2.  📂 **[PROJECT_DOCUMENTATION.md](documentation/PROJECT_DOCUMENTATION.md)**: Manual referensi komponen kode, penjelasan folder `lib`, dan cara kerja data flow.
+3.  🎨 **[ui_documentation.md](documentation/ui_documentation.md)**: Panduan visual sistem desain UI/UX, token warna, tipografi Inter, komponen, dan responsivitas layout.
+4.  ⚡ **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**: Panduan langkah demi langkah cara menghubungkan aplikasi ini ke konsol Firebase Anda sendiri menggunakan FlutterFire CLI.
 
 ---
 
@@ -63,7 +62,7 @@ lib/
     ```bash
     flutter pub get
     ```
-3.  Hubungkan dengan Firebase Anda sendiri dengan mengikuti panduan terperinci di berkas **[PANDUAN_SETUP_FIREBASE.md](file:///D:/Portofolio/ProjectKu/PANDUAN_SETUP_FIREBASE.md)**.
+3.  Hubungkan dengan Firebase Anda sendiri dengan mengikuti panduan terperinci di berkas **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**.
 4.  Jalankan static analysis untuk memastikan kode bersih dari kesalahan:
     ```bash
     flutter analyze
@@ -81,7 +80,7 @@ lib/
 
 ## 🧪 Kualitas Pengujian (Testing Quality)
 
-ProjectKu dilengkapi dengan widget testing terotomatisasi di **[widget_test.dart](file:///D:/Portofolio/ProjectKu/test/widget_test.dart)** yang memvalidasi integritas dasbor keuangan, pemrosesan filter tab, serta rendering komponen data tanpa perlu tersambung ke koneksi internet Firestore (menggunakan state overrides).
+ProjectKu dilengkapi dengan widget testing terotomatisasi di **[widget_test.dart](test/widget_test.dart)** yang memvalidasi integritas dasbor keuangan, pemrosesan filter tab, serta rendering komponen data tanpa perlu tersambung ke koneksi internet Firestore (menggunakan state overrides).
 
 Untuk menjalankan pengujian:
 ```bash
@@ -93,6 +92,6 @@ flutter test
 ## 👤 Pembuat / Kontak (Author)
 
 *   **Aldo Sebastian**
-*   LinkedIn: [LinkedIn Profile](https://linkedin.com)
-*   Portfolio Website: [aldosebastian.dev](https://aldosebastian.dev)
-*   Email: [aldo.sebastian@example.com](mailto:aldo.sebastian@example.com)
+*   LinkedIn: [aldosebastian](https://id.linkedin.com/in/aldosebastian)
+*   Portfolio Website: belum ada
+*   Email: emailaldosebastian@gmail.com(mailto:aldo.sebastian@example.com)
