@@ -1,0 +1,334 @@
+{
+  "appTitle": "ProjectKu",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "appSubtitle": "Freelancer Workspace",
+  "@appSubtitle": {
+    "description": "The subtitle of the application"
+  },
+  "syncStatus": "Firebase Sync Active in Real-Time",
+  "@syncStatus": {
+    "description": "Status message showing Firebase sync is active"
+  },
+  "welcomeTitle": "Hello, Freelancer!",
+  "@welcomeTitle": {
+    "description": "Welcome heading on dashboard"
+  },
+  "welcomeSubtitle": "Track project status and manage your finances.",
+  "@welcomeSubtitle": {
+    "description": "Welcome subtitle on dashboard"
+  },
+  "searchHint": "Search projects or clients...",
+  "@searchHint": {
+    "description": "Search input placeholder"
+  },
+  "totalPaid": "TOTAL PAID INCOME",
+  "@totalPaid": {
+    "description": "Label for paid totals card"
+  },
+  "verified": "Verified",
+  "@verified": {
+    "description": "Verified badge label"
+  },
+  "tagihanTertunda": "Pending Invoices",
+  "@tagihanTertunda": {
+    "description": "Label for unpaid total amount"
+  },
+  "proyekAktif": "Active Projects",
+  "@proyekAktif": {
+    "description": "Label for active projects count"
+  },
+  "activeProjectsCount": "{count} Projects",
+  "@activeProjectsCount": {
+    "description": "Number of projects label",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "daftarProyek": "Projects List",
+  "@daftarProyek": {
+    "description": "Heading of project list section"
+  },
+  "tabAll": "All",
+  "@tabAll": {
+    "description": "Filter tab all"
+  },
+  "tabInProgress": "In Progress",
+  "@tabInProgress": {
+    "description": "Filter tab in progress"
+  },
+  "tabCompleted": "Completed",
+  "@tabCompleted": {
+    "description": "Filter tab completed"
+  },
+  "workspaceEmptyTitle": "Workspace is Empty",
+  "@workspaceEmptyTitle": {
+    "description": "Title when no projects at all"
+  },
+  "workspaceEmptySubtitle": "Start managing your freelance business by adding your first project.",
+  "@workspaceEmptySubtitle": {
+    "description": "Subtitle when no projects at all"
+  },
+  "filterEmptyCompletedTitle": "No Completed Projects Yet",
+  "@filterEmptyCompletedTitle": {
+    "description": "Title when completed filter yields nothing"
+  },
+  "filterEmptyCompletedSubtitle": "Complete your projects to see them listed here.",
+  "@filterEmptyCompletedSubtitle": {
+    "description": "Subtitle when completed filter yields nothing"
+  },
+  "filterEmptyInProgressTitle": "No Projects in Progress",
+  "@filterEmptyInProgressTitle": {
+    "description": "Title when in progress filter yields nothing"
+  },
+  "filterEmptyInProgressSubtitle": "All of your projects are completed or haven''t started yet.",
+  "@filterEmptyInProgressSubtitle": {
+    "description": "Subtitle when in progress filter yields nothing"
+  },
+  "filterEmptyGenericTitle": "No Projects Found",
+  "@filterEmptyGenericTitle": {
+    "description": "Title when generic filter yields nothing"
+  },
+  "filterEmptyGenericSubtitle": "No projects match your current filter or search criteria.",
+  "@filterEmptyGenericSubtitle": {
+    "description": "Subtitle when generic filter yields nothing"
+  },
+  "timeRemainingCompleted": "Project is completed",
+  "@timeRemainingCompleted": {
+    "description": "Remaining time when completed"
+  },
+  "timeRemainingDays": "{days} days remaining",
+  "@timeRemainingDays": {
+    "description": "Remaining days to due date",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "timeRemainingToday": "Deadline is today",
+  "@timeRemainingToday": {
+    "description": "Remaining time when due date is today"
+  },
+  "timeProgressCompleted": "100% Completed",
+  "@timeProgressCompleted": {
+    "description": "Time progress when completed"
+  },
+  "timeProgressPercent": "{percentage}% Time",
+  "@timeProgressPercent": {
+    "description": "Percentage of elapsed project time",
+    "placeholders": {
+      "percentage": {
+        "type": "int",
+        "example": "45"
+      }
+    }
+  },
+  "statusInProgress": "In Progress",
+  "@statusInProgress": {
+    "description": "In Progress status badge label"
+  },
+  "statusCompleted": "Completed",
+  "@statusCompleted": {
+    "description": "Completed status badge label"
+  },
+  "statusOnHold": "On Hold",
+  "@statusOnHold": {
+    "description": "On Hold status badge label"
+  },
+  "paymentPaid": "Paid",
+  "@paymentPaid": {
+    "description": "Paid payment badge label"
+  },
+  "paymentInvoiceSent": "Invoice",
+  "@paymentInvoiceSent": {
+    "description": "Invoice sent payment badge label"
+  },
+  "paymentUnpaid": "Unpaid",
+  "@paymentUnpaid": {
+    "description": "Unpaid payment badge label"
+  },
+  "overdueBadge": "OVERDUE",
+  "@overdueBadge": {
+    "description": "Overdue deadline badge label"
+  },
+  "deleteTitle": "Delete Project?",
+  "@deleteTitle": {
+    "description": "Title of delete dialog"
+  },
+  "deleteConfirm": "Are you sure you want to permanently delete the project \"{name}\"?",
+  "@deleteConfirm": {
+    "description": "Confirm message of delete dialog",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Portfolio Web"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button label"
+  },
+  "deleteSuccess": "Project \"{name}\" was successfully deleted.",
+  "@deleteSuccess": {
+    "description": "Message after successful deletion",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Portfolio Web"
+      }
+    }
+  },
+  "sortTitle": "Sort Projects",
+  "@sortTitle": {
+    "description": "Title of sorting sheet"
+  },
+  "sortSubtitle": "Select criteria to arrange your project list.",
+  "@sortSubtitle": {
+    "description": "Subtitle of sorting sheet"
+  },
+  "sortDueDate": "Closest Due Date",
+  "@sortDueDate": {
+    "description": "Sort option closest due date"
+  },
+  "sortBudget": "Highest Budget",
+  "@sortBudget": {
+    "description": "Sort option highest budget"
+  },
+  "sortCreatedAt": "Newest Created",
+  "@sortCreatedAt": {
+    "description": "Sort option newest created"
+  },
+  "addProject": "Add New Project",
+  "@addProject": {
+    "description": "Form title to add project"
+  },
+  "informasiUtama": "Main Information",
+  "@informasiUtama": {
+    "description": "Main information section card header"
+  },
+  "statusKeuangan": "Status & Finance",
+  "@statusKeuangan": {
+    "description": "Status and finance section card header"
+  },
+  "informasiTambahan": "Additional Information",
+  "@informasiTambahan": {
+    "description": "Additional info section card header"
+  },
+  "projectNameLabel": "Project Name *",
+  "@projectNameLabel": {
+    "description": "Project name input field label"
+  },
+  "projectNameHint": "e.g., Landing Page Design",
+  "@projectNameHint": {
+    "description": "Project name input field hint"
+  },
+  "clientNameLabel": "Client Name *",
+  "@clientNameLabel": {
+    "description": "Client name input field label"
+  },
+  "clientNameHint": "e.g., Indotama Corp",
+  "@clientNameHint": {
+    "description": "Client name input field hint"
+  },
+  "projectBudgetLabel": "Project Budget *",
+  "@projectBudgetLabel": {
+    "description": "Project budget input field label"
+  },
+  "projectBudgetHint": "e.g., 5000000",
+  "@projectBudgetHint": {
+    "description": "Project budget input field hint"
+  },
+  "dueDateLabel": "Due Date *",
+  "@dueDateLabel": {
+    "description": "Due date picker field label"
+  },
+  "validationNameRequired": "Project name is required",
+  "@validationNameRequired": {
+    "description": "Validation error when name is empty"
+  },
+  "validationClientRequired": "Client name is required",
+  "@validationClientRequired": {
+    "description": "Validation error when client name is empty"
+  },
+  "validationBudgetRequired": "Budget is required",
+  "@validationBudgetRequired": {
+    "description": "Validation error when budget is empty"
+  },
+  "validationBudgetInvalid": "Enter a valid budget amount",
+  "@validationBudgetInvalid": {
+    "description": "Validation error when budget is not valid number"
+  },
+  "statusPengerjaan": "Project Status",
+  "@statusPengerjaan": {
+    "description": "Status pengerjaan label"
+  },
+  "statusPembayaran": "Payment Status",
+  "@statusPembayaran": {
+    "description": "Status pembayaran label"
+  },
+  "descriptionLabel": "Notes / Scope of Work",
+  "@descriptionLabel": {
+    "description": "Description field label"
+  },
+  "descriptionHint": "Write project scope, figma links, or client instructions...",
+  "@descriptionHint": {
+    "description": "Description field hint"
+  },
+  "saveToDatabase": "Save to Database",
+  "@saveToDatabase": {
+    "description": "Save button label"
+  },
+  "saveSuccess": "Project successfully saved to Cloud Firestore",
+  "@saveSuccess": {
+    "description": "Success message after saving new project"
+  },
+  "saveError": "Failed to save to Firestore: {error}",
+  "@saveError": {
+    "description": "Error message when saving project fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+  "projectDetail": "Project Detail",
+  "@projectDetail": {
+    "description": "Title of detail screen"
+  },
+  "projectBudgetHeader": "PROJECT BUDGET",
+  "@projectBudgetHeader": {
+    "description": "Label of budget header in detail card"
+  },
+  "quickUpdateStatus": "Quick Update Status",
+  "@quickUpdateStatus": {
+    "description": "Quick status update button label"
+  },
+  "deleteProjectBtn": "Delete Project",
+  "@deleteProjectBtn": {
+    "description": "Delete project button label"
+  },
+  "editProjectInfo": "Edit Project Info",
+  "@editProjectInfo": {
+    "description": "Edit project info header"
+  },
+  "saveChanges": "Save Changes",
+  "@saveChanges": {
+    "description": "Save changes button label"
+  },
+  "saveChangesSuccess": "Project changes successfully saved",
+  "@saveChangesSuccess": {
+    "description": "Success message after saving changes"
+  }
+}
