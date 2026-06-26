@@ -7,7 +7,7 @@
 [![GoRouter](https://img.shields.io/badge/GoRouter-v17--Declarative-0A0F1D)](https://pub.dev/packages/go_router)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-**ProjectKu** adalah aplikasi mobile manajemen proyek dan pelacak finansial *real-time* yang dirancang khusus untuk memenuhi kebutuhan administrasi pekerja lepas (*freelancer*). Dibangun menggunakan **Flutter (Material 3)**, dengan pengelolaan state reaktif **Riverpod**, navigasi deklaratif **GoRouter**, serta sinkronisasi data instan berbasis **Firebase Cloud Firestore**.
+**ProjectKu** adalah aplikasi mobile manajemen proyek dan pelacak finansial *real-time* yang dirancang khusus untuk memenuhi kebutuhan administrasi pekerja lepas (*freelancer*). Dibangun menggunakan **Flutter (Material 3)**, dengan pengelolaan state reaktif **Riverpod**, navigasi deklaratif **GoRouter**, autentikasi **Firebase Authentication (Email & Password)**, serta sinkronisasi data instan berbasis **Firebase Cloud Firestore**.
 
 Aplikasi ini berfokus pada penyelesaian masalah klasik *freelancer*, seperti pencatatan keuangan yang tercecer, manajemen klien yang tidak terpusat, serta kelalaian dalam memantau tenggat waktu proyek (*due date*).
 
@@ -27,8 +27,9 @@ Untuk mempermudah peninjauan teknis, dokumentasi proyek ini telah dibagi menjadi
 
 ## ✨ Fitur Utama (Core Features)
 
+*   🔐 **Auth-Gated Workspace:** Login berbasis Email & Password dengan redirect otomatis ke `/login` sebelum pengguna masuk ke dashboard.
 *   💳 **Dasbor Wallet-style Hero Card:** Visualisasi rekap keuangan real-time yang memisahkan Total Pendapatan Bersih (Terbayar), Total Tagihan Aktif (Belum Terbayar), serta jumlah proyek yang sedang berjalan.
-*   🔄 **Real-time Firestore Integration:** Pembaruan data instan di seluruh perangkat pengguna tanpa perlu memuat ulang halaman (*pull-to-refresh*).
+*   🔄 **Real-time Firestore Integration:** Pembaruan data instan di seluruh perangkat pengguna tanpa perlu memuat ulang halaman (*pull-to-refresh*), dengan query Firestore yang dibatasi berdasarkan `userId` milik akun login.
 *   🏷️ **Dynamic Progress Bar Timeline:** Bar kemajuan pengerjaan proyek yang beradaptasi secara otomatis (berwarna merah jika terlambat, kuning jika mendekati tenggat waktu, dan hijau jika selesai).
 *   📱 **Responsive Layout (Adaptabilitas Layar):** Pembatasan lebar kontainer cerdas (maksimal 850px) memastikan kenyamanan visual yang prima pada perangkat mobile, tablet, hingga desktop web.
 *   🇺🇸🇮🇩 **Lokalisasi Bahasa (Localization):** Mendukung Bahasa Indonesia (default) dan Bahasa Inggris untuk cakupan audiens profesional yang lebih luas.
@@ -43,9 +44,10 @@ Basis kode ProjectKu menerapkan arsitektur **MVC (Model-View-Controller)** yang 
 lib/
 ├── models/        # Entitas data bisnis murni (contoh: project_model.dart)
 ├── views/         # Representasi tampilan UI & Layout (contoh: project_list_view.dart)
-├── controllers/   # Logika bisnis & manipulasi state Riverpod (contoh: project_controller.dart)
-├── services/      # Abstraksi koneksi luar & Database Firestore (contoh: firestore_service.dart)
-└── utils/         # Konfigurasi router, format rupiah, dan tema global Material 3
+├── controllers/   # Logika bisnis & manipulasi state Riverpod (auth, project_controller.dart)
+├── services/      # Abstraksi koneksi luar, Firebase Auth, dan Database Firestore
+├── utils/         # Konfigurasi router, format rupiah, dan tema global Material 3
+└── views/         # UI screens termasuk login, dashboard, detail, dan form proyek
 ```
 
 ---
@@ -63,7 +65,7 @@ lib/
     ```bash
     flutter pub get
     ```
-3.  Hubungkan dengan Firebase Anda sendiri dengan mengikuti panduan terperinci di berkas **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**.
+3.  Hubungkan dengan Firebase Anda sendiri dengan mengikuti panduan terperinci di berkas **[PANDUAN_SETUP_FIREBASE.md](documentation/PANDUAN_SETUP_FIREBASE.md)**, lalu aktifkan **Authentication > Email/Password**.
 4.  Jalankan static analysis untuk memastikan kode bersih dari kesalahan:
     ```bash
     flutter analyze
@@ -81,7 +83,7 @@ lib/
 
 ## 🧪 Kualitas Pengujian (Testing Quality)
 
-ProjectKu dilengkapi dengan widget testing terotomatisasi di **[widget_test.dart](test/widget_test.dart)** yang memvalidasi integritas dasbor keuangan, pemrosesan filter tab, serta rendering komponen data tanpa perlu tersambung ke koneksi internet Firestore (menggunakan state overrides).
+ProjectKu dilengkapi dengan widget testing terotomatisasi di **[widget_test.dart](test/widget_test.dart)** yang memvalidasi integritas dasbor keuangan, pemrosesan filter tab, serta rendering komponen data tanpa perlu tersambung ke koneksi internet Firestore (menggunakan state overrides). Alur auth juga sudah dipisahkan sehingga dashboard hanya dapat diakses setelah login.
 
 Untuk menjalankan pengujian:
 ```bash
