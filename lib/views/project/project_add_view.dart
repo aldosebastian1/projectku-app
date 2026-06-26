@@ -71,273 +71,278 @@ class _ProjectAddViewState extends ConsumerState<ProjectAddView> {
       ),
       body: state.isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor))
-          : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (state.errorMessage != null) ...[
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppTheme.errorColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppTheme.errorColor.withValues(alpha: 0.2)),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.error_outline_rounded, color: AppTheme.errorColor),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                state.errorMessage!,
-                                style: const TextStyle(color: AppTheme.errorColor, fontSize: 13, fontWeight: FontWeight.w600),
+          : Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 850),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (state.errorMessage != null) ...[
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppTheme.errorColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: AppTheme.errorColor.withValues(alpha: 0.2)),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.error_outline_rounded, color: AppTheme.errorColor),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    state.errorMessage!,
+                                    style: const TextStyle(color: AppTheme.errorColor, fontSize: 13, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+
+                        // Form Container
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppTheme.cardColor,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.informasiUtama,
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
+                              const SizedBox(height: 20),
 
-                    // Form Container
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppTheme.cardColor,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: const Color(0x0CFFFFFF)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.informasiUtama,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 20),
+                              Text(
+                                l10n.projectNameLabel,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                controller: _nameController,
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                decoration: InputDecoration(
+                                  hintText: l10n.projectNameHint,
+                                  prefixIcon: const Icon(Icons.work_outline_rounded, color: AppTheme.textColorSecondary, size: 20),
+                                ),
+                                validator: (val) => val == null || val.trim().isEmpty ? l10n.validationNameRequired : null,
+                              ),
+                              const SizedBox(height: 20),
 
-                          Text(
-                            l10n.projectNameLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _nameController,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            decoration: InputDecoration(
-                              hintText: l10n.projectNameHint,
-                              prefixIcon: const Icon(Icons.work_outline_rounded, color: AppTheme.textColorSecondary, size: 20),
-                            ),
-                            validator: (val) => val == null || val.trim().isEmpty ? l10n.validationNameRequired : null,
-                          ),
-                          const SizedBox(height: 20),
+                              Text(
+                                l10n.clientNameLabel,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                controller: _clientController,
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                decoration: InputDecoration(
+                                  hintText: l10n.clientNameHint,
+                                  prefixIcon: const Icon(Icons.person_pin_rounded, color: AppTheme.textColorSecondary, size: 20),
+                                ),
+                                validator: (val) => val == null || val.trim().isEmpty ? l10n.validationClientRequired : null,
+                              ),
+                              const SizedBox(height: 20),
 
-                          Text(
-                            l10n.clientNameLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _clientController,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            decoration: InputDecoration(
-                              hintText: l10n.clientNameHint,
-                              prefixIcon: const Icon(Icons.person_pin_rounded, color: AppTheme.textColorSecondary, size: 20),
-                            ),
-                            validator: (val) => val == null || val.trim().isEmpty ? l10n.validationClientRequired : null,
-                          ),
-                          const SizedBox(height: 20),
+                              Text(
+                                l10n.projectBudgetLabel,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                controller: _budgetController,
+                                keyboardType: TextInputType.number,
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
+                                decoration: InputDecoration(
+                                  hintText: l10n.projectBudgetHint,
+                                  prefixIcon: const Icon(Icons.wallet_rounded, color: AppTheme.textColorSecondary, size: 20),
+                                ),
+                                validator: (val) {
+                                  if (val == null || val.trim().isEmpty) return l10n.validationBudgetRequired;
+                                  final numVal = double.tryParse(val);
+                                  if (numVal == null || numVal <= 0) return l10n.validationBudgetInvalid;
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
 
-                          Text(
-                            l10n.projectBudgetLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _budgetController,
-                            keyboardType: TextInputType.number,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
-                            decoration: InputDecoration(
-                              hintText: l10n.projectBudgetHint,
-                              prefixIcon: const Icon(Icons.wallet_rounded, color: AppTheme.textColorSecondary, size: 20),
-                            ),
-                            validator: (val) {
-                              if (val == null || val.trim().isEmpty) return l10n.validationBudgetRequired;
-                              final numVal = double.tryParse(val);
-                              if (numVal == null || numVal <= 0) return l10n.validationBudgetInvalid;
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 20),
-
-                          Text(
-                            l10n.dueDateLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          InkWell(
-                            onTap: () => _selectDueDate(context, ref, state.dueDate),
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF0F1524),
+                              Text(
+                                l10n.dueDateLabel,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              InkWell(
+                                onTap: () => _selectDueDate(context, ref, state.dueDate),
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: const Color(0x0CFFFFFF)),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF0F1524),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(color: const Color(0x0CFFFFFF)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Icon(Icons.calendar_today_rounded, color: AppTheme.primaryColor, size: 18),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        DateFormat('dd MMMM yyyy', localeStr).format(state.dueDate),
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppTheme.textColorPrimary,
-                                        ),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.calendar_today_rounded, color: AppTheme.primaryColor, size: 18),
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            DateFormat('dd MMMM yyyy', localeStr).format(state.dueDate),
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppTheme.textColorPrimary,
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                      const Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textColorSecondary, size: 24),
                                     ],
                                   ),
-                                  const Icon(Icons.arrow_drop_down_rounded, color: AppTheme.textColorSecondary, size: 24),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Status & Parameters Card
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppTheme.cardColor,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.statusKeuangan,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 20),
+
+                              Text(
+                                l10n.statusPengerjaan,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              _buildChoiceSelector<String>(
+                                currentValue: state.status,
+                                options: const ['In Progress', 'Completed', 'On Hold'],
+                                labelBuilder: (val) {
+                                  if (val == 'In Progress') return l10n.statusInProgress;
+                                  if (val == 'Completed') return l10n.statusCompleted;
+                                  return l10n.statusOnHold;
+                                },
+                                activeColorBuilder: (val) {
+                                  if (val == 'Completed') return AppTheme.secondaryColor;
+                                  if (val == 'In Progress') return AppTheme.primaryColor;
+                                  return AppTheme.accentColor;
+                                },
+                                onChanged: (val) => controller.selectStatus(val),
+                              ),
+                              const SizedBox(height: 20),
+
+                              Text(
+                                l10n.statusPembayaran,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              _buildChoiceSelector<String>(
+                                currentValue: state.paymentStatus,
+                                options: const ['Unpaid', 'Invoice Sent', 'Paid'],
+                                labelBuilder: (val) {
+                                  if (val == 'Paid') return l10n.paymentPaid;
+                                  if (val == 'Invoice Sent') return l10n.paymentInvoiceSent;
+                                  return l10n.paymentUnpaid;
+                                },
+                                activeColorBuilder: (val) {
+                                  if (val == 'Paid') return AppTheme.secondaryColor;
+                                  if (val == 'Invoice Sent') return AppTheme.accentColor;
+                                  return AppTheme.errorColor;
+                                },
+                                onChanged: (val) => controller.selectPaymentStatus(val),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Additional Description Card
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppTheme.cardColor,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: const Color(0x0CFFFFFF)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.informasiTambahan,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 20),
+
+                              Text(
+                                l10n.descriptionLabel,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
+                              ),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                controller: _descController,
+                                maxLines: 4,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, height: 1.4),
+                                decoration: InputDecoration(
+                                  hintText: l10n.descriptionHint,
+                                  alignLabelWithHint: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 36),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final budget = double.tryParse(_budgetController.text) ?? 0.0;
+                              final success = await controller.saveProject(
+                                name: _nameController.text,
+                                clientName: _clientController.text,
+                                budget: budget,
+                                description: _descController.text,
+                              );
+                              if (success && context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(l10n.saveSuccess)),
+                                );
+                                context.pop();
+                              }
+                            }
+                          },
+                          child: Text(l10n.saveToDatabase),
+                        ),
+                        const SizedBox(height: 48),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-
-                    // Status & Parameters Card
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppTheme.cardColor,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: const Color(0x0CFFFFFF)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.statusKeuangan,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 20),
-
-                          Text(
-                            l10n.statusPengerjaan,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          _buildChoiceSelector<String>(
-                            currentValue: state.status,
-                            options: const ['In Progress', 'Completed', 'On Hold'],
-                            labelBuilder: (val) {
-                              if (val == 'In Progress') return l10n.statusInProgress;
-                              if (val == 'Completed') return l10n.statusCompleted;
-                              return l10n.statusOnHold;
-                            },
-                            activeColorBuilder: (val) {
-                              if (val == 'Completed') return AppTheme.secondaryColor;
-                              if (val == 'In Progress') return AppTheme.primaryColor;
-                              return AppTheme.accentColor;
-                            },
-                            onChanged: (val) => controller.selectStatus(val),
-                          ),
-                          const SizedBox(height: 20),
-
-                          Text(
-                            l10n.statusPembayaran,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          _buildChoiceSelector<String>(
-                            currentValue: state.paymentStatus,
-                            options: const ['Unpaid', 'Invoice Sent', 'Paid'],
-                            labelBuilder: (val) {
-                              if (val == 'Paid') return l10n.paymentPaid;
-                              if (val == 'Invoice Sent') return l10n.paymentInvoiceSent;
-                              return l10n.paymentUnpaid;
-                            },
-                            activeColorBuilder: (val) {
-                              if (val == 'Paid') return AppTheme.secondaryColor;
-                              if (val == 'Invoice Sent') return AppTheme.accentColor;
-                              return AppTheme.errorColor;
-                            },
-                            onChanged: (val) => controller.selectPaymentStatus(val),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Additional Description Card
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppTheme.cardColor,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: const Color(0x0CFFFFFF)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.informasiTambahan,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 20),
-
-                          Text(
-                            l10n.descriptionLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textColorSecondary),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _descController,
-                            maxLines: 4,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, height: 1.4),
-                            decoration: InputDecoration(
-                              hintText: l10n.descriptionHint,
-                              alignLabelWithHint: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 36),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final budget = double.tryParse(_budgetController.text) ?? 0.0;
-                          final success = await controller.saveProject(
-                            name: _nameController.text,
-                            clientName: _clientController.text,
-                            budget: budget,
-                            description: _descController.text,
-                          );
-                          if (success && context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.saveSuccess)),
-                            );
-                            context.pop();
-                          }
-                        }
-                      },
-                      child: Text(l10n.saveToDatabase),
-                    ),
-                    const SizedBox(height: 48),
-                  ],
+                  ),
                 ),
               ),
             ),
