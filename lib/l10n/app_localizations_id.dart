@@ -286,4 +286,13 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get tugasKosong =>
       'Belum ada tugas. Tambahkan tugas pertamamu di atas!';
+
+  @override
+  String get analitikKeuangan => 'Analitik Keuangan';
+
+  @override
+  String get perbandinganPendapatan => 'Status Pendapatan';
+
+  @override
+  String get pendapatan6Bulan => 'Pendapatan Lunas: 6 Bulan Terakhir';
 }
