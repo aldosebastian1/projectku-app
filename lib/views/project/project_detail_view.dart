@@ -1,3 +1,5 @@
+import '../widgets/custom_progress_bar.dart';
+import '../widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -180,206 +182,172 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     final l10n = AppLocalizations.of(context)!;
     final localeStr = Localizations.localeOf(context).toString();
     final isOverdue = project.dueDate.isBefore(DateTime.now()) && project.status != 'Completed';
-    final remainingDays = project.dueDate.difference(DateTime.now()).inDays;
-    final statusColor = _getStatusColor(project.status);
-    final paymentColor = _getPaymentColor(project.paymentStatus);
+    
+    final totalTasks = project.tasks.length;
+    final completedTasks = project.tasks.where((t) => t.isCompleted).length;
+    final double taskProgress = totalTasks > 0 ? completedTasks / totalTasks : 0.0;
+
+    final initials = project.name.isNotEmpty ? project.name[0].toUpperCase() : '?';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hero Section Card
+        // Header Card (Like reference)
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppTheme.cardColor,
+            color: AppTheme.elevatedSurface,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppTheme.borderHighlightColor),
+            border: Border.all(color: AppTheme.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppTheme.baseBackground,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    alignment: Alignment.center,
                     child: Text(
-                      project.name,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            letterSpacing: -0.5,
+                      initials,
+                      style: const TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textColorPrimary,
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          project.clientName,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.textColorSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(Icons.person_pin_rounded, size: 16, color: AppTheme.textColorSecondary),
-                  const SizedBox(width: 8),
-                  Text(
-                    project.clientName,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.textColorSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  StatusChip(status: project.status),
                 ],
               ),
               const SizedBox(height: 24),
-              Text(
-                l10n.projectBudgetHeader,
-                style: const TextStyle(
-                  fontSize: 10,
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textColorSecondary,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                formatRupiah(project.budget),
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.primaryColor,
-                  letterSpacing: -0.5,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomProgressBar(
+                      percentage: project.status == 'Completed' ? 1.0 : taskProgress,
+                      isOverdue: isOverdue,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    '${(project.status == 'Completed' ? 100 : taskProgress * 100).toInt()}%',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textColorPrimary,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
-        // Info Grid Card
+        // Info List
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           decoration: BoxDecoration(
-            color: AppTheme.cardColor,
+            color: AppTheme.elevatedSurface,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppTheme.borderHighlightColor),
+            border: Border.all(color: AppTheme.border),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.statusKeuangan,
-                style: Theme.of(context).textTheme.titleLarge,
+              _buildInfoRow(
+                icon: Icons.calendar_today_rounded,
+                label: 'Deadline',
+                value: DateFormat('dd MMM yyyy', localeStr).format(project.dueDate),
+                isOverdue: isOverdue,
               ),
-              const SizedBox(height: 20),
-              _buildDetailRow(
-                l10n.statusPengerjaan,
-                _buildBadge(
-                  project.status == 'In Progress'
-                      ? l10n.statusInProgress
-                      : (project.status == 'Completed' ? l10n.statusCompleted : l10n.statusOnHold),
-                  statusColor,
-                ),
+              const Divider(color: AppTheme.border, height: 1),
+              _buildInfoRow(
+                icon: Icons.attach_money_rounded,
+                label: 'Anggaran',
+                value: formatRupiah(project.budget),
+                valueColor: AppTheme.primaryColor,
               ),
-              const Divider(color: AppTheme.borderHighlightColor, height: 24),
-              _buildDetailRow(
-                l10n.statusPembayaran,
-                _buildBadge(
-                  project.paymentStatus == 'Paid'
-                      ? l10n.paymentPaid
-                      : (project.paymentStatus == 'Invoice Sent' ? l10n.paymentInvoiceSent : l10n.paymentUnpaid),
-                  paymentColor,
-                ),
-              ),
-              const Divider(color: AppTheme.borderHighlightColor, height: 24),
-              _buildDetailRow(
-                l10n.tenggatWaktu,
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.calendar_today_rounded,
-                      size: 14,
-                      color: isOverdue ? AppTheme.errorColor : AppTheme.textColorSecondary,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      DateFormat('dd MMMM yyyy', localeStr).format(project.dueDate),
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: isOverdue ? AppTheme.errorColor : AppTheme.textColorPrimary,
-                      ),
-                    ),
-                    if (isOverdue) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppTheme.errorColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          l10n.overdueBadge,
-                          style: const TextStyle(
-                            color: AppTheme.errorColor,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ]
-                  ],
-                ),
-              ),
-              const Divider(color: AppTheme.borderHighlightColor, height: 24),
-              _buildDetailRow(
-                l10n.sisaWaktu,
-                Text(
-                  project.status == 'Completed'
-                      ? l10n.timeRemainingCompleted
-                      : (remainingDays > 0 ? l10n.timeRemainingDays(remainingDays) : (remainingDays == 0 ? l10n.timeRemainingToday : l10n.timeRemainingOverdue)),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: project.status == 'Completed'
-                        ? AppTheme.secondaryColor
-                        : (isOverdue ? AppTheme.errorColor : AppTheme.textColorPrimary),
-                  ),
-                ),
+              const Divider(color: AppTheme.border, height: 1),
+              _buildInfoRow(
+                icon: Icons.add_circle_outline_rounded,
+                label: 'Dibuat',
+                value: DateFormat('dd MMM yyyy', localeStr).format(project.createdAt),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
         // Description Card
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: AppTheme.cardColor,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppTheme.borderHighlightColor),
+        if (project.description.isNotEmpty) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.elevatedSurface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: AppTheme.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Deskripsi',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColorPrimary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  project.description,
+                  style: const TextStyle(
+                    height: 1.5,
+                    fontSize: 13,
+                    color: AppTheme.textColorSecondary,
+                  ),
+                ),
+              ],
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.deskripsiProyek,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                project.description.isNotEmpty ? project.description : l10n.noNotes,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                      color: project.description.isNotEmpty
-                          ? AppTheme.textColorPrimary
-                          : AppTheme.textColorSecondary,
-                    ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
+          const SizedBox(height: 16),
+        ],
+        
         _buildTasksCard(context, project, listController),
         const SizedBox(height: 36),
 
@@ -391,6 +359,14 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
                 onPressed: () => _showStatusQuickPicker(context, project, listController),
                 icon: const Icon(Icons.edit_note_rounded),
                 label: Text(l10n.quickUpdateStatus),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.elevatedSurface,
+                  foregroundColor: AppTheme.primaryColor,
+                  elevation: 0,
+                  side: const BorderSide(color: AppTheme.border),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
               ),
             ),
           ],
@@ -428,15 +404,51 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.errorColor.withValues(alpha: 0.12),
-            foregroundColor: AppTheme.errorColor,
+            backgroundColor: AppTheme.errorAccent.withValues(alpha: 0.1),
+            foregroundColor: AppTheme.errorAccent,
             elevation: 0,
-            side: BorderSide(color: AppTheme.errorColor.withValues(alpha: 0.3)),
+            minimumSize: const Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           child: Text(l10n.deleteProjectBtn),
         ),
         const SizedBox(height: 48),
       ],
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    bool isOverdue = false,
+    Color? valueColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: AppTheme.textColorSecondary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppTheme.textColorSecondary,
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isOverdue ? AppTheme.errorAccent : (valueColor ?? AppTheme.textColorPrimary),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -696,67 +708,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
     );
   }
 
-  Widget _buildDetailRow(String label, Widget valueWidget) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppTheme.textColorSecondary,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        valueWidget,
-      ],
-    );
-  }
 
-  Widget _buildBadge(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: 0.15), width: 1),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: color,
-          fontSize: 10.5,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
 
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Completed':
-        return AppTheme.secondaryColor;
-      case 'In Progress':
-        return AppTheme.primaryColor;
-      case 'On Hold':
-        return AppTheme.accentColor;
-      default:
-        return AppTheme.textColorSecondary;
-    }
-  }
 
-  Color _getPaymentColor(String status) {
-    switch (status) {
-      case 'Paid':
-        return AppTheme.secondaryColor;
-      case 'Invoice Sent':
-        return AppTheme.accentColor;
-      case 'Unpaid':
-        return AppTheme.errorColor;
-      default:
-        return AppTheme.textColorSecondary;
-    }
-  }
 
   Widget _buildChoiceSelector<T>({
     required T currentValue,
@@ -991,9 +945,9 @@ class _ProjectDetailViewState extends ConsumerState<ProjectDetailView> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.cardColor,
+        color: AppTheme.elevatedSurface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppTheme.borderHighlightColor),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
